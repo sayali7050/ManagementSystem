@@ -1,0 +1,14 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # adjust the RewriteBase if your app lives in a sub‑folder
+    # e.g. RewriteBase /ci-app/
+    RewriteBase /
+
+    # Don’t rewrite requests to existing files or directories
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+
+    # Send everything else to index.php
+    RewriteRule ^(.*)$ index.php/$1 [L]
+</IfModule>
