@@ -5,7 +5,7 @@ class Home extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
-        $this->load->model(['Room_model', 'Hotel_model', 'Booking_model']);
+        $this->load->model(['Room_Model', 'Hotel_model', 'Booking_model']);
         $this->load->library('pagination');
     }
 
@@ -19,7 +19,7 @@ class Home extends CI_Controller {
         $data['room_types'] = $this->Room_model->get_room_types();
         
         $this->load->view('templates/header', $data);
-        $this->load->view('index', $data);
+        $this->load->view('home/index', $data);
         $this->load->view('templates/footer');
     }
 
@@ -63,7 +63,7 @@ class Home extends CI_Controller {
         $data['room_types'] = $this->Room_model->get_room_types();
 
         $this->load->view('templates/header', $data);
-        $this->load->view('search_results', $data);
+        $this->load->view('home/search_results', $data);
         $this->load->view('templates/footer');
     }
 
@@ -84,7 +84,7 @@ class Home extends CI_Controller {
         ]);
 
         $this->load->view('templates/header', $data);
-        $this->load->view('room_details', $data);
+        $this->load->view('home/room_details', $data);
         $this->load->view('templates/footer');
     }
 
@@ -92,7 +92,7 @@ class Home extends CI_Controller {
         $data['title'] = 'About Us - Hotel Management System';
         
         $this->load->view('templates/header', $data);
-        $this->load->view('about', $data);
+        $this->load->view('home/about', $data);
         $this->load->view('templates/footer');
     }
 
@@ -113,7 +113,7 @@ class Home extends CI_Controller {
         }
         
         $this->load->view('templates/header', $data);
-        $this->load->view('contact', $data);
+        $this->load->view('home/contact', $data);
         $this->load->view('templates/footer');
     }
 
@@ -138,7 +138,7 @@ class Home extends CI_Controller {
         }
         
         $this->load->view('templates/header', $data);
-        $this->load->view('booking_lookup', $data);
+        $this->load->view('home/booking_lookup', $data);
         $this->load->view('templates/footer');
     }
 }
