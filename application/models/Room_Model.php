@@ -37,7 +37,7 @@ class Room_model extends CI_Model {
 
     // Get room by ID with full details
     public function get_room($id) {
-        $this->db->select('r.*, h.name as hotel_name, h.address, h.city, h.rating, rt.name as room_type_name, rt.description as room_type_description, rt.max_occupancy');
+        $this->db->select('r.*, h.name as hotel_name, h.address, h.city, h.star_rating, rt.name as room_type_name, rt.description as room_type_description, rt.max_occupancy');
         $this->db->from('rooms r');
         $this->db->join('hotels h', 'r.hotel_id = h.id');
         $this->db->join('room_types rt', 'r.room_type_id = rt.id');
@@ -48,7 +48,7 @@ class Room_model extends CI_Model {
     // Check room availability for specific dates
     public function check_availability($room_id, $check_in, $check_out) {
         $this->db->where('room_id', $room_id);
-        $this->db->where('status !=', 'cancelled');
+        $this->db->where('booking_status !=', 'cancelled');
         $this->db->group_start();
             $this->db->group_start();
                 $this->db->where('check_in_date <=', $check_in);
@@ -70,7 +70,7 @@ class Room_model extends CI_Model {
 
     // Get available rooms for date range
     public function get_available_rooms($check_in, $check_out, $guests = 1, $filters = array()) {
-        $this->db->select('r.*, h.name as hotel_name, h.rating, rt.name as room_type_name, rt.max_occupancy');
+        $this->db->select('r.*, h.name as hotel_name, h.star_rating, rt.name as room_type_name, rt.max_occupancy');
         $this->db->from('rooms r');
         $this->db->join('hotels h', 'r.hotel_id = h.id');
         $this->db->join('room_types rt', 'r.room_type_id = rt.id');
@@ -94,7 +94,7 @@ class Room_model extends CI_Model {
         // Exclude rooms that are already booked
         $this->db->where('r.id NOT IN (
             SELECT DISTINCT room_id FROM bookings 
-            WHERE status != "cancelled" 
+            WHERE bookings.booking_status != "cancelled" 
             AND (
                 (check_in_date <= "' . $check_in . '" AND check_out_date > "' . $check_in . '")
                 OR (check_in_date < "' . $check_out . '" AND check_out_date >= "' . $check_out . '")

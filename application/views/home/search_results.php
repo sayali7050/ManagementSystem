@@ -182,7 +182,7 @@
                     <?php foreach ($rooms as $room): ?>
                         <div class="col-md-6 mb-4 room-item" 
                              data-price="<?php echo $room->price_per_night; ?>" 
-                             data-rating="<?php echo $room->rating ?? 0; ?>" 
+                             data-rating="<?php echo $room->star_rating ?? 0; ?>" 
                              data-name="<?php echo $room->hotel_name; ?>">
                             <div class="card room-card h-100">
                                 <div class="card-body">
@@ -204,9 +204,9 @@
                                             </small>
                                         </div>
                                         <div class="col-6">
-                                            <?php if (isset($room->rating) && $room->rating > 0): ?>
+                                            <?php if (isset($room->star_rating) && $room->star_rating > 0): ?>
                                                 <small class="text-muted">
-                                                    <i class="fas fa-star text-warning"></i> <?php echo $room->rating; ?>/5
+                                                    <i class="fas fa-star text-warning"></i> <?php echo $room->star_rating; ?>/5
                                                 </small>
                                             <?php endif; ?>
                                         </div>

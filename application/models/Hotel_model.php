@@ -61,7 +61,7 @@ class Hotel_model extends CI_Model {
         }
         
         $this->db->where('status', 'active');
-        $this->db->order_by('rating', 'DESC');
+        $this->db->order_by('star_rating', 'DESC');
         return $this->db->get('hotels')->result();
     }
 

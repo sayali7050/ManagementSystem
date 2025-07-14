@@ -34,12 +34,12 @@
                             </p>
                         </div>
                         <div class="text-right">
-                            <?php if ($room->rating > 0): ?>
+                            <?php if ($room->star_rating > 0): ?>
                                 <div class="mb-2">
                                     <?php for ($i = 1; $i <= 5; $i++): ?>
-                                        <i class="fas fa-star <?php echo $i <= $room->rating ? 'text-warning' : 'text-muted'; ?>"></i>
+                                        <i class="fas fa-star <?php echo $i <= $room->star_rating ? 'text-warning' : 'text-muted'; ?>"></i>
                                     <?php endfor; ?>
-                                    <span class="ml-1"><?php echo $room->rating; ?>/5</span>
+                                    <span class="ml-1"><?php echo $room->star_rating; ?>/5</span>
                                 </div>
                             <?php endif; ?>
                             <span class="badge badge-primary">Room <?php echo $room->room_number; ?></span>

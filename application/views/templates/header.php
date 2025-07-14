@@ -4,174 +4,121 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo isset($title) ? $title : 'Hotel Management System'; ?></title>
-    
-    <!-- Bootstrap 4 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
-    <!-- Custom CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #2c3e50;
-            --secondary-color: #3498db;
-            --accent-color: #e67e22;
-            --success-color: #27ae60;
-            --danger-color: #e74c3c;
+            --primary: #1a237e; /* Navy blue */
+            --secondary: #1976d2; /* Blue accent */
+            --bg: #f8fafc;
         }
-        
         body {
+            background: var(--bg);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f8f9fa;
         }
-        
+        .navbar {
+            background: #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
         .navbar-brand {
             font-weight: bold;
-            color: var(--primary-color) !important;
+            color: var(--primary) !important;
+            letter-spacing: 1px;
+            font-size: 1.5rem;
         }
-        
-        .btn-primary {
-            background-color: var(--secondary-color);
-            border-color: var(--secondary-color);
+        .nav-link {
+            color: var(--primary) !important;
+            font-weight: 500;
+            margin-right: 0.5rem;
+            margin-left: 0.5rem;
+            transition: color 0.2s;
         }
-        
-        .btn-primary:hover {
-            background-color: #2980b9;
-            border-color: #2980b9;
+        .nav-link.active, .nav-link:focus, .nav-link:hover {
+            color: var(--secondary) !important;
         }
-        
-        .hero-section {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white;
-            padding: 100px 0;
-            margin-bottom: 50px;
-        }
-        
-        .card {
+        .btn-primary, .btn-primary:visited {
+            background: var(--secondary) !important;
             border: none;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
+            border-radius: 2rem;
+            padding-left: 1.5rem;
+            padding-right: 1.5rem;
+            font-weight: 600;
         }
-        
-        .card-header {
-            background-color: var(--primary-color);
-            color: white;
-            border-radius: 10px 10px 0 0 !important;
+        .btn-primary:hover {
+            background: #1565c0 !important;
         }
-        
-        .room-card {
-            transition: transform 0.3s ease;
+        .navbar-toggler {
+            border: none;
         }
-        
-        .room-card:hover {
-            transform: translateY(-5px);
+        .navbar-toggler:focus {
+            box-shadow: none;
         }
-        
-        .footer {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 40px 0;
-            margin-top: 50px;
+        .navbar-text {
+            color: var(--primary);
+            font-size: 1rem;
+            margin-left: 1rem;
         }
-        
-        .alert {
-            border-radius: 10px;
-        }
-        
-        .form-control {
-            border-radius: 8px;
-        }
-        
-        .btn {
-            border-radius: 8px;
-            padding: 10px 20px;
-        }
-        
-        .search-form {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-            margin-top: -50px;
-            position: relative;
-            z-index: 100;
+        @media (max-width: 991.98px) {
+            .navbar-collapse {
+                background: #fff;
+                border-radius: 0.5rem;
+                margin-top: 0.5rem;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            }
         }
     </style>
 </head>
 <body>
 
-<!-- Navigation -->
-<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+<nav class="navbar navbar-expand-lg sticky-top">
     <div class="container">
-        <a class="navbar-brand" href="<?php echo base_url(); ?>">
-            <i class="fas fa-hotel"></i> Hotel Management
+        <a class="navbar-brand d-flex align-items-center" href="<?php echo base_url(); ?>">
+            <i class="fas fa-hotel me-2 text-primary"></i> Hotel Management
         </a>
-        
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
             <span class="navbar-toggler-icon"></span>
         </button>
-        
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ml-auto">
+        <div class="collapse navbar-collapse" id="mainNavbar">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center">
                 <li class="nav-item">
-                    <a class="nav-link" href="<?php echo base_url(); ?>">
-                        <i class="fas fa-home"></i> Home
-                    </a>
+                    <a class="nav-link" href="<?php echo base_url(); ?>">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="<?php echo base_url('search'); ?>">
-                        <i class="fas fa-search"></i> Search Rooms
-                    </a>
+                    <a class="nav-link" href="<?php echo base_url('search'); ?>">Search Rooms</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="<?php echo base_url('about'); ?>">
-                        <i class="fas fa-info-circle"></i> About
-                    </a>
+                    <a class="nav-link" href="<?php echo base_url('about'); ?>">About</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="<?php echo base_url('contact'); ?>">
-                        <i class="fas fa-phone"></i> Contact
-                    </a>
+                    <a class="nav-link" href="<?php echo base_url('contact'); ?>">Contact</a>
                 </li>
-                
                 <?php if ($this->session->userdata('logged_in')): ?>
                     <?php if ($this->session->userdata('role') === 'admin' || $this->session->userdata('role') === 'staff'): ?>
                         <li class="nav-item">
-                            <a class="nav-link" href="<?php echo base_url('admin/dashboard'); ?>">
-                                <i class="fas fa-tachometer-alt"></i> Admin Panel
-                            </a>
+                            <a class="nav-link" href="<?php echo base_url('admin/dashboard'); ?>">Admin Panel</a>
                         </li>
                     <?php else: ?>
                         <li class="nav-item">
-                            <a class="nav-link" href="<?php echo base_url('customer/dashboard'); ?>">
-                                <i class="fas fa-user"></i> My Account
-                            </a>
+                            <a class="nav-link" href="<?php echo base_url('customer/dashboard'); ?>">My Account</a>
                         </li>
                     <?php endif; ?>
                     <li class="nav-item">
-                        <a class="nav-link" href="<?php echo base_url('auth/logout'); ?>">
-                            <i class="fas fa-sign-out-alt"></i> Logout
-                        </a>
+                        <a class="nav-link" href="<?php echo base_url('auth/logout'); ?>">Logout</a>
                     </li>
                     <li class="nav-item">
-                        <span class="navbar-text">
-                            Welcome, <?php echo $this->session->userdata('first_name'); ?>!
-                        </span>
+                        <span class="navbar-text ms-2">Welcome, <?php echo $this->session->userdata('first_name'); ?>!</span>
                     </li>
                 <?php else: ?>
                     <li class="nav-item">
-                        <a class="nav-link" href="<?php echo base_url('booking-lookup'); ?>">
-                            <i class="fas fa-search"></i> Find Booking
-                        </a>
+                        <a class="nav-link" href="<?php echo base_url('booking-lookup'); ?>">Find Booking</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="<?php echo base_url('login'); ?>">
-                            <i class="fas fa-sign-in-alt"></i> Login
-                        </a>
+                        <a class="nav-link" href="<?php echo base_url('login'); ?>">Login</a>
                     </li>
                     <li class="nav-item">
-                        <a class="btn btn-primary ml-2" href="<?php echo base_url('register'); ?>">
-                            <i class="fas fa-user-plus"></i> Register
-                        </a>
+                        <a class="btn btn-primary ms-2" href="<?php echo base_url('register'); ?>">Register</a>
                     </li>
                 <?php endif; ?>
             </ul>
@@ -184,42 +131,31 @@
     <div class="container mt-3">
         <div class="alert alert-success alert-dismissible fade show">
             <i class="fas fa-check-circle"></i> <?php echo $this->session->flashdata('success'); ?>
-            <button type="button" class="close" data-dismiss="alert">
-                <span>&times;</span>
-            </button>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     </div>
 <?php endif; ?>
-
 <?php if ($this->session->flashdata('error')): ?>
     <div class="container mt-3">
         <div class="alert alert-danger alert-dismissible fade show">
             <i class="fas fa-exclamation-triangle"></i> <?php echo $this->session->flashdata('error'); ?>
-            <button type="button" class="close" data-dismiss="alert">
-                <span>&times;</span>
-            </button>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     </div>
 <?php endif; ?>
-
 <?php if (isset($error)): ?>
     <div class="container mt-3">
         <div class="alert alert-danger alert-dismissible fade show">
             <i class="fas fa-exclamation-triangle"></i> <?php echo $error; ?>
-            <button type="button" class="close" data-dismiss="alert">
-                <span>&times;</span>
-            </button>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     </div>
 <?php endif; ?>
-
 <?php if (isset($success)): ?>
     <div class="container mt-3">
         <div class="alert alert-success alert-dismissible fade show">
             <i class="fas fa-check-circle"></i> <?php echo $success; ?>
-            <button type="button" class="close" data-dismiss="alert">
-                <span>&times;</span>
-            </button>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     </div>
 <?php endif; ?>
