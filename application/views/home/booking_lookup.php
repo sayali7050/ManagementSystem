@@ -1,85 +1,51 @@
-<!-- Page Header -->
-<div class="bg-light py-5">
+<!-- LuxuryHotel-inspired Booking Lookup Page -->
+<section class="py-5 bg-primary text-white text-center luxury-hero" style="background: linear-gradient(90deg, #1a237e 60%, #1976d2 100%);">
     <div class="container">
-        <div class="row">
-            <div class="col-lg-12 text-center">
-                <h1><i class="fas fa-search"></i> Find Your Booking</h1>
-                <p class="lead">Retrieve your reservation details using your booking reference and email</p>
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb justify-content-center">
-                        <li class="breadcrumb-item"><a href="<?php echo base_url(); ?>">Home</a></li>
-                        <li class="breadcrumb-item active">Booking Lookup</li>
-                    </ol>
-                </nav>
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <h1 class="display-4 fw-bold mb-2"><i class="fas fa-search me-2"></i>Find Your Booking</h1>
+                <p class="lead mb-0">Retrieve your reservation details using your booking reference and email</p>
             </div>
         </div>
     </div>
-</div>
-
+</section>
 <div class="container my-5">
     <div class="row justify-content-center">
         <div class="col-lg-8">
-            <!-- Search Form -->
-            <div class="card">
-                <div class="card-header">
-                    <h4><i class="fas fa-ticket-alt"></i> Enter Your Booking Details</h4>
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0"><i class="fas fa-ticket-alt me-2"></i>Enter Your Booking Details</h4>
                 </div>
                 <div class="card-body">
                     <form action="<?php echo base_url('booking-lookup'); ?>" method="POST" id="lookupForm">
                         <?php echo form_hidden($this->security->get_csrf_token_name(), $this->security->get_csrf_hash()); ?>
-                        
                         <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="booking_reference">Booking Reference <span class="text-danger">*</span></label>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text"><i class="fas fa-ticket-alt"></i></span>
-                                        </div>
-                                        <input type="text" 
-                                               class="form-control" 
-                                               id="booking_reference" 
-                                               name="booking_reference" 
-                                               placeholder="e.g., BK2024123456"
-                                               value="<?php echo set_value('booking_reference'); ?>" 
-                                               required>
-                                    </div>
-                                    <small class="form-text text-muted">Found in your confirmation email</small>
+                            <div class="col-md-6 mb-3">
+                                <label for="booking_reference" class="form-label">Booking Reference <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-ticket-alt"></i></span>
+                                    <input type="text" class="form-control" id="booking_reference" name="booking_reference" placeholder="e.g., BK2024123456" value="<?php echo set_value('booking_reference'); ?>" required>
                                 </div>
+                                <small class="form-text text-muted">Found in your confirmation email</small>
                             </div>
-                            
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="email">Email Address <span class="text-danger">*</span></label>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text"><i class="fas fa-envelope"></i></span>
-                                        </div>
-                                        <input type="email" 
-                                               class="form-control" 
-                                               id="email" 
-                                               name="email" 
-                                               placeholder="your@email.com"
-                                               value="<?php echo set_value('email'); ?>" 
-                                               required>
-                                    </div>
-                                    <small class="form-text text-muted">Used when making the booking</small>
+                            <div class="col-md-6 mb-3">
+                                <label for="email" class="form-label">Email Address <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                                    <input type="email" class="form-control" id="email" name="email" placeholder="your@email.com" value="<?php echo set_value('email'); ?>" required>
                                 </div>
+                                <small class="form-text text-muted">Used when making the booking</small>
                             </div>
                         </div>
-                        
-                        <button type="submit" class="btn btn-primary btn-lg btn-block">
-                            <i class="fas fa-search"></i> Find My Booking
-                        </button>
+                        <button type="submit" class="btn btn-primary btn-lg w-100"><i class="fas fa-search me-2"></i>Find My Booking</button>
                     </form>
                 </div>
             </div>
-
-            <!-- Booking Result -->
+            <div id="lookupResult">
             <?php if (isset($booking) && $booking): ?>
-                <div class="card mt-4">
+                <div class="card shadow-sm mb-4">
                     <div class="card-header bg-success text-white">
-                        <h5><i class="fas fa-check-circle"></i> Booking Found!</h5>
+                        <h5 class="mb-0"><i class="fas fa-check-circle me-2"></i>Booking Found!</h5>
                     </div>
                     <div class="card-body">
                         <div class="row">
@@ -88,7 +54,7 @@
                                 <table class="table table-borderless table-sm">
                                     <tr>
                                         <td><strong>Booking Reference:</strong></td>
-                                        <td><span class="badge badge-primary"><?php echo $booking->booking_reference; ?></span></td>
+                                        <td><span class="badge bg-primary"><?php echo $booking->booking_reference; ?></span></td>
                                     </tr>
                                     <tr>
                                         <td><strong>Status:</strong></td>
@@ -104,7 +70,7 @@
                                                 default: $status_class = 'secondary';
                                             }
                                             ?>
-                                            <span class="badge badge-<?php echo $status_class; ?>">
+                                            <span class="badge bg-<?php echo $status_class; ?>">
                                                 <?php echo ucfirst(str_replace('_', ' ', $booking->status)); ?>
                                             </span>
                                         </td>
@@ -123,7 +89,6 @@
                                     </tr>
                                 </table>
                             </div>
-                            
                             <div class="col-md-6">
                                 <h6><i class="fas fa-hotel text-primary"></i> Stay Details</h6>
                                 <table class="table table-borderless table-sm">
@@ -154,9 +119,7 @@
                                 </table>
                             </div>
                         </div>
-                        
                         <hr>
-                        
                         <div class="row">
                             <div class="col-md-6">
                                 <h6><i class="fas fa-dollar-sign text-success"></i> Payment Information</h6>
@@ -173,7 +136,7 @@
                                         <td><strong>Tax:</strong></td>
                                         <td>$<?php echo number_format($booking->tax_amount, 2); ?></td>
                                     </tr>
-                                    <tr class="font-weight-bold">
+                                    <tr class="fw-bold">
                                         <td><strong>Total Amount:</strong></td>
                                         <td class="text-primary">$<?php echo number_format($booking->total_amount, 2); ?></td>
                                     </tr>
@@ -189,123 +152,20 @@
                                                 default: $payment_class = 'secondary';
                                             }
                                             ?>
-                                            <span class="badge badge-<?php echo $payment_class; ?>">
+                                            <span class="badge bg-<?php echo $payment_class; ?>">
                                                 <?php echo ucfirst($booking->payment_status); ?>
                                             </span>
                                         </td>
                                     </tr>
                                 </table>
                             </div>
-                            
-                            <div class="col-md-6">
-                                <h6><i class="fas fa-calendar text-info"></i> Important Dates</h6>
-                                <table class="table table-borderless table-sm">
-                                    <tr>
-                                        <td><strong>Booking Date:</strong></td>
-                                        <td><?php echo date('M j, Y g:i A', strtotime($booking->created_at)); ?></td>
-                                    </tr>
-                                    <?php if (isset($booking->updated_at) && $booking->updated_at != $booking->created_at): ?>
-                                    <tr>
-                                        <td><strong>Last Updated:</strong></td>
-                                        <td><?php echo date('M j, Y g:i A', strtotime($booking->updated_at)); ?></td>
-                                    </tr>
-                                    <?php endif; ?>
-                                    <tr>
-                                        <td><strong>Check-in Time:</strong></td>
-                                        <td>3:00 PM</td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>Check-out Time:</strong></td>
-                                        <td>11:00 AM</td>
-                                    </tr>
-                                </table>
-                            </div>
-                        </div>
-                        
-                        <?php if ($booking->special_requests): ?>
-                        <div class="row">
-                            <div class="col-12">
-                                <h6><i class="fas fa-clipboard-list text-warning"></i> Special Requests</h6>
-                                <div class="alert alert-info">
-                                    <?php echo nl2br(htmlspecialchars($booking->special_requests)); ?>
-                                </div>
-                            </div>
-                        </div>
-                        <?php endif; ?>
-                        
-                        <!-- Action Buttons -->
-                        <div class="row mt-3">
-                            <div class="col-12 text-center">
-                                <?php if ($booking->status == 'confirmed' && strtotime($booking->check_in_date) > time() + 86400): ?>
-                                    <button class="btn btn-warning mr-2" onclick="cancelBooking('<?php echo $booking->booking_reference; ?>')">
-                                        <i class="fas fa-times-circle"></i> Cancel Booking
-                                    </button>
-                                <?php endif; ?>
-                                
-                                <a href="<?php echo base_url('contact'); ?>" class="btn btn-outline-primary mr-2">
-                                    <i class="fas fa-phone"></i> Contact Hotel
-                                </a>
-                                
-                                <button class="btn btn-outline-secondary" onclick="printBooking()">
-                                    <i class="fas fa-print"></i> Print Details
-                                </button>
-                            </div>
                         </div>
                     </div>
                 </div>
             <?php endif; ?>
-
-            <!-- Error Message -->
-            <?php if (isset($error) && $error): ?>
-                <div class="card mt-4">
-                    <div class="card-body text-center">
-                        <i class="fas fa-exclamation-triangle fa-3x text-warning mb-3"></i>
-                        <h5>Booking Not Found</h5>
-                        <p class="text-muted"><?php echo $error; ?></p>
-                        <p class="small">Please check your booking reference and email address, or contact us for assistance.</p>
-                    </div>
-                </div>
+            <?php if (isset($error)): ?>
+                <div class="alert alert-danger mt-3"><?php echo $error; ?></div>
             <?php endif; ?>
-
-            <!-- Help Section -->
-            <div class="card mt-4">
-                <div class="card-header">
-                    <h6><i class="fas fa-question-circle"></i> Need Help?</h6>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h6>Can't Find Your Booking?</h6>
-                            <ul class="list-unstyled small">
-                                <li>• Check your email for the booking confirmation</li>
-                                <li>• Verify the booking reference format (e.g., BK2024123456)</li>
-                                <li>• Ensure you're using the same email address</li>
-                                <li>• Check if the booking was made by someone else</li>
-                            </ul>
-                        </div>
-                        <div class="col-md-6">
-                            <h6>Contact Information</h6>
-                            <p class="small text-muted mb-1">
-                                <i class="fas fa-phone"></i> +1 (555) 123-4567
-                            </p>
-                            <p class="small text-muted mb-1">
-                                <i class="fas fa-envelope"></i> reservations@hotel.com
-                            </p>
-                            <p class="small text-muted">
-                                <i class="fas fa-clock"></i> Available 24/7
-                            </p>
-                        </div>
-                    </div>
-                    
-                    <div class="text-center mt-3">
-                        <a href="<?php echo base_url('contact'); ?>" class="btn btn-primary btn-sm">
-                            <i class="fas fa-headset"></i> Contact Support
-                        </a>
-                        <a href="<?php echo base_url('search'); ?>" class="btn btn-outline-primary btn-sm ml-2">
-                            <i class="fas fa-search"></i> Make New Booking
-                        </a>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
@@ -313,35 +173,52 @@
 
 <script>
 $(document).ready(function() {
-    // Form validation
+    // AJAX booking lookup
     $('#lookupForm').on('submit', function(e) {
+        e.preventDefault();
         var reference = $('#booking_reference').val().trim();
         var email = $('#email').val().trim();
-        
+        var csrfName = $('input[name="<?php echo $this->security->get_csrf_token_name(); ?>"]').attr('name');
+        var csrfHash = $('input[name="<?php echo $this->security->get_csrf_token_name(); ?>"]').val();
         if (!reference) {
             alert('Please enter your booking reference');
             $('#booking_reference').focus();
-            e.preventDefault();
             return false;
         }
-        
         if (!email) {
             alert('Please enter your email address');
             $('#email').focus();
-            e.preventDefault();
             return false;
         }
-        
-        // Show loading
-        $(this).find('button[type="submit"]').html('<i class="fas fa-spinner fa-spin"></i> Searching...').prop('disabled', true);
+        var $btn = $(this).find('button[type="submit"]');
+        $btn.html('<i class="fas fa-spinner fa-spin"></i> Searching...').prop('disabled', true);
+        // AJAX POST to /booking-lookup
+        $.ajax({
+            url: '<?php echo base_url('booking-lookup'); ?>',
+            type: 'POST',
+            data: {
+                booking_reference: reference,
+                email: email,
+                [csrfName]: csrfHash
+            },
+            dataType: 'html',
+            success: function(response) {
+                // Parse the returned HTML and extract the booking result area
+                var resultHtml = $(response).find('#lookupResult').html();
+                $('#lookupResult').html(resultHtml);
+                $btn.html('<i class="fas fa-search me-2"></i>Find My Booking').prop('disabled', false);
+            },
+            error: function() {
+                $('#lookupResult').html('<div class="alert alert-danger mt-3">An error occurred. Please try again.</div>');
+                $btn.html('<i class="fas fa-search me-2"></i>Find My Booking').prop('disabled', false);
+            }
+        });
     });
-    
     // Format booking reference input
     $('#booking_reference').on('input', function() {
         var value = $(this).val().toUpperCase();
         $(this).val(value);
     });
-    
     // Real-time validation
     $('#booking_reference, #email').on('blur', function() {
         if ($(this).val().trim()) {
@@ -351,15 +228,12 @@ $(document).ready(function() {
         }
     });
 });
-
 // Cancel booking function
 function cancelBooking(bookingReference) {
     if (confirm('Are you sure you want to cancel this booking? This action cannot be undone.')) {
-        // Here you would implement the cancellation logic
         alert('Cancellation request submitted. You will receive a confirmation email shortly.');
     }
 }
-
 // Print booking details
 function printBooking() {
     window.print();

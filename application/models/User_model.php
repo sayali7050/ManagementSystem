@@ -16,25 +16,32 @@ class User_model extends CI_Model {
 
     // Get user by ID
     public function get_user($id) {
-        return $this->db->where('id', $id)->get('users')->row();
+        $this->db->from('users');
+        $this->db->where('id', $id);
+        return $this->db->get()->row();
     }
 
     // Get user by email
     public function get_user_by_email($email) {
-        return $this->db->where('email', $email)->get('users')->row();
+        $this->db->from('users');
+        $this->db->where('email', $email);
+        return $this->db->get()->row();
     }
 
     // Get user by username
     public function get_user_by_username($username) {
-        return $this->db->where('username', $username)->get('users')->row();
+        $this->db->from('users');
+        $this->db->where('username', $username);
+        return $this->db->get()->row();
     }
 
     // Login authentication
     public function authenticate($login, $password) {
         // Try login with email or username
+        $this->db->from('users');
         $this->db->where('(email = "' . $login . '" OR username = "' . $login . '")');
         $this->db->where('status', 'active');
-        $user = $this->db->get('users')->row();
+        $user = $this->db->get()->row();
 
         if ($user && password_verify($password, $user->password)) {
             return $user;
@@ -53,19 +60,21 @@ class User_model extends CI_Model {
 
     // Get all users with pagination
     public function get_users($limit = 10, $offset = 0, $role = null) {
+        $this->db->from('users');
         if ($role) {
             $this->db->where('role', $role);
         }
         $this->db->order_by('created_at', 'DESC');
-        return $this->db->limit($limit, $offset)->get('users')->result();
+        return $this->db->limit($limit, $offset)->get()->result();
     }
 
     // Count users
     public function count_users($role = null) {
+        $this->db->from('users');
         if ($role) {
             $this->db->where('role', $role);
         }
-        return $this->db->count_all_results('users');
+        return $this->db->count_all_results();
     }
 
     // Delete user
@@ -75,20 +84,22 @@ class User_model extends CI_Model {
 
     // Check if email exists
     public function email_exists($email, $exclude_id = null) {
+        $this->db->from('users');
         $this->db->where('email', $email);
         if ($exclude_id) {
             $this->db->where('id !=', $exclude_id);
         }
-        return $this->db->count_all_results('users') > 0;
+        return $this->db->count_all_results() > 0;
     }
 
     // Check if username exists
     public function username_exists($username, $exclude_id = null) {
+        $this->db->from('users');
         $this->db->where('username', $username);
         if ($exclude_id) {
             $this->db->where('id !=', $exclude_id);
         }
-        return $this->db->count_all_results('users') > 0;
+        return $this->db->count_all_results() > 0;
     }
 
     // Update last login
@@ -138,11 +149,12 @@ class User_model extends CI_Model {
 
     // Get users with pagination and filters for admin
     public function get_users_admin($limit = 10, $offset = 0, $role = null) {
+        $this->db->from('users');
         $this->db->select('id, username, email, first_name, last_name, role, status, created_at, last_login');
         if ($role) {
             $this->db->where('role', $role);
         }
         $this->db->order_by('created_at', 'DESC');
-        return $this->db->limit($limit, $offset)->get('users')->result_array();
+        return $this->db->limit($limit, $offset)->get()->result_array();
     }
 }

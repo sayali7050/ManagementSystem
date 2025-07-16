@@ -47,15 +47,16 @@ class Booking extends CI_Controller {
         }
 
         $days = (strtotime($check_out) - strtotime($check_in)) / (60 * 60 * 24);
-        $total_amount = $room['price'] * $days;
+        $total_amount = $room['price_per_night'] * $days;
         $tax_amount = $total_amount * 0.10; // 10% tax
         $final_amount = $total_amount + $tax_amount;
 
         // Create booking data
         $booking_data = array(
             'user_id' => $this->session->userdata('user_id'),
-            'hotel_id' => $hotel_id,
+            // 'hotel_id' => $hotel_id, // removed, not in bookings table
             'room_id' => $room_id,
+            // 'room_price' => $room['price_per_night'], // removed, not in bookings table
             'check_in_date' => $check_in,
             'check_out_date' => $check_out,
             'guests' => $guests,

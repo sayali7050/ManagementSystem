@@ -27,7 +27,11 @@ class Customer extends CI_Controller {
     public function dashboard() {
         $data['title'] = 'Customer Dashboard';
         $user_id = $this->session->userdata('user_id');
-        
+        // Fetch user profile
+        $user = $this->User_model->get_user($user_id);
+        $data['customer_name'] = isset($user->first_name) ? $user->first_name . ' ' . $user->last_name : '';
+        $data['customer_email'] = isset($user->email) ? $user->email : '';
+        $data['customer_phone'] = isset($user->phone) ? $user->phone : '';
         // Get customer statistics
         $data['stats'] = array(
             'total_bookings' => $this->Booking_model->count_user_bookings($user_id),
@@ -35,16 +39,30 @@ class Customer extends CI_Controller {
             'completed_bookings' => $this->Booking_model->count_completed_bookings($user_id),
             'cancelled_bookings' => $this->Booking_model->count_cancelled_bookings($user_id)
         );
-        
         // Get recent bookings
         $data['recent_bookings'] = $this->Booking_model->get_user_bookings($user_id, 5, 0);
-        
         // Get upcoming bookings
         $data['upcoming_bookings'] = $this->Booking_model->get_upcoming_user_bookings($user_id, 3);
-        
         $this->load->view('templates/header', $data);
         $this->load->view('customer/dashboard', $data);
         $this->load->view('templates/footer');
+    }
+
+    public function dashboard_data() {
+        if (!$this->input->is_ajax_request()) {
+            show_404();
+        }
+        $user_id = $this->session->userdata('user_id');
+        $data = [];
+        $data['stats'] = array(
+            'total_bookings' => $this->Booking_model->count_user_bookings($user_id),
+            'upcoming_bookings' => $this->Booking_model->count_upcoming_bookings($user_id),
+            'completed_bookings' => $this->Booking_model->count_completed_bookings($user_id),
+            'cancelled_bookings' => $this->Booking_model->count_cancelled_bookings($user_id)
+        );
+        $data['recent_bookings'] = $this->Booking_model->get_user_bookings($user_id, 5, 0);
+        $data['upcoming_bookings'] = $this->Booking_model->get_upcoming_user_bookings($user_id, 3);
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
 
     public function profile() {
@@ -63,8 +81,7 @@ class Customer extends CI_Controller {
                     'first_name' => $this->input->post('first_name'),
                     'last_name' => $this->input->post('last_name'),
                     'email' => $this->input->post('email'),
-                    'phone' => $this->input->post('phone'),
-                    'address' => $this->input->post('address')
+                    'phone' => $this->input->post('phone')
                 );
                 
                 if ($this->User_model->update_user($user_id, $profile_data)) {
@@ -122,5 +139,24 @@ class Customer extends CI_Controller {
         $this->load->view('templates/header', $data);
         $this->load->view('customer/change_password', $data);
         $this->load->view('templates/footer');
+    }
+
+    public function make_booking() {
+        $data['title'] = 'Make a Booking';
+        $this->load->model('Hotel_model');
+        $this->load->model('Room_model');
+        $data['hotels'] = $this->Hotel_model->get_active_hotels();
+        $data['rooms'] = $this->Room_model->get_rooms(100, 0, ['status' => 'available']);
+        $this->load->view('templates/header', $data);
+        $this->load->view('customer/make_booking', $data);
+        $this->load->view('templates/footer');
+    }
+
+    // AJAX endpoint to get rooms by hotel
+    public function get_rooms_by_hotel() {
+        $hotel_id = $this->input->post('hotel_id');
+        $this->load->model('Room_model');
+        $rooms = $this->Room_model->get_rooms_by_hotel($hotel_id);
+        echo json_encode(['rooms' => $rooms]);
     }
 }

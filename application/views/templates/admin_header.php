@@ -3,209 +3,184 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= isset($title) ? $title : 'Admin Dashboard' ?> - Hotel Management</title>
-    
-    <!-- Bootstrap 4 CSS -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
-    <!-- AdminLTE CSS -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/3.1.0/css/adminlte.min.css" rel="stylesheet">
-    <!-- DataTables CSS -->
-    <link href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap4.min.css" rel="stylesheet">
-    
+    <title><?= isset($title) ? $title : 'Admin Dashboard' ?> - LuxuryHotel Admin</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome 6 -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-        .main-sidebar {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        body { background: #f8fafc; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .admin-navbar {
+            background: #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
         }
-        .nav-pills .nav-link.active {
-            background-color: #fff;
-            color: #667eea !important;
+        .admin-navbar .navbar-brand {
+            font-weight: bold;
+            color: #1a237e !important;
+            letter-spacing: 1px;
+            font-size: 2rem;
+            display: flex;
+            align-items: center;
+        }
+        .admin-navbar .navbar-brand .luxury-logo {
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+        }
+        .admin-sidebar {
+            background: linear-gradient(135deg, #1a237e 0%, #1976d2 100%);
+            min-height: 100vh;
+            color: #fff;
+            padding-top: 2rem;
+        }
+        .admin-sidebar .nav-link {
+            color: #fff;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            border-radius: 0.5rem;
+            transition: background 0.2s, color 0.2s;
+        }
+        .admin-sidebar .nav-link.active, .admin-sidebar .nav-link:focus, .admin-sidebar .nav-link:hover {
+            background: #fff;
+            color: #1a237e !important;
+        }
+        .admin-sidebar .nav-icon {
+            margin-right: 0.75rem;
+        }
+        .admin-sidebar .sidebar-user {
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        .admin-sidebar .sidebar-user .fa-user-circle {
+            font-size: 2.5rem;
+            color: #fff;
+        }
+        .admin-sidebar .sidebar-user .user-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+        .admin-sidebar .sidebar-user .user-role {
+            font-size: 0.95rem;
+            color: #c5cae9;
         }
         .content-wrapper {
-            background: #f4f6f9;
+            background: #f8fafc;
+            min-height: 100vh;
+            padding-left: 260px;
         }
-        .card {
-            box-shadow: 0 0 1px rgba(0,0,0,.125), 0 1px 3px rgba(0,0,0,.2);
-            border: none;
-        }
-        .info-box {
-            box-shadow: 0 0 1px rgba(0,0,0,.125), 0 1px 3px rgba(0,0,0,.2);
-            border-radius: 0.25rem;
-        }
-        .btn-primary {
-            background-color: #667eea;
-            border-color: #667eea;
-        }
-        .btn-primary:hover {
-            background-color: #5a67d8;
-            border-color: #5a67d8;
+        @media (max-width: 991.98px) {
+            .content-wrapper { padding-left: 0; }
+            .admin-sidebar { position: static; min-height: auto; }
         }
     </style>
 </head>
-<body class="hold-transition sidebar-mini layout-fixed">
-<div class="wrapper">
-
-    <!-- Navbar -->
-    <nav class="main-header navbar navbar-expand navbar-white navbar-light">
-        <!-- Left navbar links -->
-        <ul class="navbar-nav">
+<body>
+<div class="d-flex">
+    <!-- Sidebar -->
+    <nav class="admin-sidebar flex-shrink-0 p-3 position-fixed h-100" style="width: 260px;">
+        <a class="navbar-brand mb-4 d-flex align-items-center" href="<?= base_url('admin/dashboard') ?>">
+            <i class="fas fa-gem luxury-logo text-warning"></i> LuxuryHotel Admin
+        </a>
+        <div class="sidebar-user mb-4">
+            <i class="fas fa-user-circle"></i>
+            <div class="user-name mt-2"><?= $this->session->userdata('first_name') . ' ' . $this->session->userdata('last_name') ?></div>
+            <div class="user-role"><?= ucfirst($this->session->userdata('role')) ?></div>
+        </div>
+        <ul class="nav flex-column">
             <li class="nav-item">
-                <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
-            </li>
-            <li class="nav-item d-none d-sm-inline-block">
-                <a href="<?= base_url('admin/dashboard') ?>" class="nav-link">Dashboard</a>
-            </li>
-        </ul>
-
-        <!-- Right navbar links -->
-        <ul class="navbar-nav ml-auto">
-            <li class="nav-item dropdown">
-                <a class="nav-link" data-toggle="dropdown" href="#">
-                    <i class="far fa-user"></i>
-                    <span class="ml-1"><?= $this->session->userdata('first_name') ?></span>
+                <a href="<?= base_url('admin/dashboard') ?>" class="nav-link <?= ($this->uri->segment(2) == 'dashboard' || $this->uri->segment(2) == '') ? 'active' : '' ?>">
+                    <i class="nav-icon fas fa-tachometer-alt"></i> Dashboard
                 </a>
-                <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                    <a href="<?= base_url('customer/profile') ?>" class="dropdown-item">
-                        <i class="fas fa-user mr-2"></i> Profile
-                    </a>
-                    <div class="dropdown-divider"></div>
-                    <a href="<?= base_url('admin/settings') ?>" class="dropdown-item">
-                        <i class="fas fa-cog mr-2"></i> Settings
-                    </a>
-                    <div class="dropdown-divider"></div>
-                    <a href="<?= base_url('logout') ?>" class="dropdown-item">
-                        <i class="fas fa-sign-out-alt mr-2"></i> Logout
-                    </a>
-                </div>
+            </li>
+            <li class="nav-item">
+                <a href="<?= base_url('admin/bookings') ?>" class="nav-link <?= ($this->uri->segment(2) == 'bookings') ? 'active' : '' ?>">
+                    <i class="nav-icon fas fa-calendar-check"></i> Bookings
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="<?= base_url('admin/rooms') ?>" class="nav-link <?= ($this->uri->segment(2) == 'rooms') ? 'active' : '' ?>">
+                    <i class="nav-icon fas fa-bed"></i> Rooms
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="<?= base_url('admin/hotels') ?>" class="nav-link <?= ($this->uri->segment(2) == 'hotels') ? 'active' : '' ?>">
+                    <i class="nav-icon fas fa-building"></i> Hotels
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="<?= base_url('admin/users') ?>" class="nav-link <?= ($this->uri->segment(2) == 'users') ? 'active' : '' ?>">
+                    <i class="nav-icon fas fa-users"></i> Users
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="<?= base_url('admin/reports') ?>" class="nav-link <?= ($this->uri->segment(2) == 'reports') ? 'active' : '' ?>">
+                    <i class="nav-icon fas fa-chart-bar"></i> Reports
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="<?= base_url('admin/settings') ?>" class="nav-link <?= ($this->uri->segment(2) == 'settings') ? 'active' : '' ?>">
+                    <i class="nav-icon fas fa-cog"></i> Settings
+                </a>
+            </li>
+            <li class="nav-item mt-3">
+                <a href="<?= base_url() ?>" class="nav-link" target="_blank">
+                    <i class="nav-icon fas fa-external-link-alt"></i> View Website
+                </a>
             </li>
         </ul>
     </nav>
-
-    <!-- Main Sidebar Container -->
-    <aside class="main-sidebar sidebar-dark-primary elevation-4">
-        <!-- Brand Logo -->
-        <a href="<?= base_url('admin/dashboard') ?>" class="brand-link text-center">
-            <i class="fas fa-hotel brand-image"></i>
-            <span class="brand-text font-weight-light text-white">Hotel Admin</span>
-        </a>
-
-        <!-- Sidebar -->
-        <div class="sidebar">
-            <!-- Sidebar user panel -->
-            <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-                <div class="image">
-                    <i class="fas fa-user-circle fa-2x text-white"></i>
-                </div>
-                <div class="info">
-                    <a href="#" class="d-block text-white">
-                        <?= $this->session->userdata('first_name') . ' ' . $this->session->userdata('last_name') ?>
-                    </a>
-                    <small class="text-muted"><?= ucfirst($this->session->userdata('role')) ?></small>
-                </div>
-            </div>
-
-            <!-- Sidebar Menu -->
-            <nav class="mt-2">
-                <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                    <li class="nav-item">
-                        <a href="<?= base_url('admin/dashboard') ?>" class="nav-link <?= ($this->uri->segment(2) == 'dashboard' || $this->uri->segment(2) == '') ? 'active' : '' ?>">
-                            <i class="nav-icon fas fa-tachometer-alt"></i>
-                            <p>Dashboard</p>
-                        </a>
-                    </li>
-                    
-                    <li class="nav-item">
-                        <a href="<?= base_url('admin/bookings') ?>" class="nav-link <?= ($this->uri->segment(2) == 'bookings') ? 'active' : '' ?>">
-                            <i class="nav-icon fas fa-calendar-check"></i>
-                            <p>Bookings</p>
-                        </a>
-                    </li>
-                    
-                    <li class="nav-item">
-                        <a href="<?= base_url('admin/rooms') ?>" class="nav-link <?= ($this->uri->segment(2) == 'rooms') ? 'active' : '' ?>">
-                            <i class="nav-icon fas fa-bed"></i>
-                            <p>Rooms</p>
-                        </a>
-                    </li>
-                    
-                    <li class="nav-item">
-                        <a href="<?= base_url('admin/hotels') ?>" class="nav-link <?= ($this->uri->segment(2) == 'hotels') ? 'active' : '' ?>">
-                            <i class="nav-icon fas fa-building"></i>
-                            <p>Hotels</p>
-                        </a>
-                    </li>
-                    
-                    <li class="nav-item">
-                        <a href="<?= base_url('admin/users') ?>" class="nav-link <?= ($this->uri->segment(2) == 'users') ? 'active' : '' ?>">
-                            <i class="nav-icon fas fa-users"></i>
-                            <p>Users</p>
-                        </a>
-                    </li>
-                    
-                    <li class="nav-item">
-                        <a href="<?= base_url('admin/reports') ?>" class="nav-link <?= ($this->uri->segment(2) == 'reports') ? 'active' : '' ?>">
-                            <i class="nav-icon fas fa-chart-bar"></i>
-                            <p>Reports</p>
-                        </a>
-                    </li>
-                    
-                    <li class="nav-item">
-                        <a href="<?= base_url('admin/settings') ?>" class="nav-link <?= ($this->uri->segment(2) == 'settings') ? 'active' : '' ?>">
-                            <i class="nav-icon fas fa-cog"></i>
-                            <p>Settings</p>
-                        </a>
-                    </li>
-                    
-                    <li class="nav-item mt-3">
-                        <a href="<?= base_url() ?>" class="nav-link" target="_blank">
-                            <i class="nav-icon fas fa-external-link-alt"></i>
-                            <p>View Website</p>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-        </div>
-    </aside>
-
-    <!-- Content Wrapper -->
-    <div class="content-wrapper">
-        <!-- Content Header -->
-        <div class="content-header">
+    <!-- Main Content Wrapper -->
+    <div class="content-wrapper flex-grow-1">
+        <!-- Top Navbar -->
+        <nav class="navbar admin-navbar navbar-expand-lg px-4 py-2 sticky-top">
             <div class="container-fluid">
-                <!-- Display Flash Messages -->
-                <?php if ($this->session->flashdata('success')): ?>
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        <i class="fas fa-check-circle mr-2"></i>
-                        <?= $this->session->flashdata('success') ?>
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+                <button class="navbar-toggler d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#adminSidebarOffcanvas" aria-controls="adminSidebarOffcanvas">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <a class="navbar-brand d-lg-none" href="<?= base_url('admin/dashboard') ?>">
+                    <i class="fas fa-gem luxury-logo text-warning"></i> LuxuryHotel Admin
+                </a>
+                <div class="ms-auto d-flex align-items-center gap-3">
+                    <span class="fw-bold text-primary">Welcome, <?= $this->session->userdata('first_name') ?>!</span>
+                    <div class="dropdown">
+                        <a class="btn btn-outline-primary dropdown-toggle" href="#" role="button" id="adminUserDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-user"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="adminUserDropdown">
+                            <li><a class="dropdown-item" href="<?= base_url('customer/profile') ?>"><i class="fas fa-user me-2"></i>Profile</a></li>
+                            <li><a class="dropdown-item" href="<?= base_url('admin/settings') ?>"><i class="fas fa-cog me-2"></i>Settings</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="<?= base_url('logout') ?>"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                        </ul>
                     </div>
-                <?php endif; ?>
-
-                <?php if ($this->session->flashdata('error')): ?>
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        <i class="fas fa-exclamation-circle mr-2"></i>
-                        <?= $this->session->flashdata('error') ?>
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                <?php endif; ?>
-
-                <?php if ($this->session->flashdata('warning')): ?>
-                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                        <i class="fas fa-exclamation-triangle mr-2"></i>
-                        <?= $this->session->flashdata('warning') ?>
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                <?php endif; ?>
+                </div>
             </div>
+        </nav>
+        <!-- Flash Messages -->
+        <div class="container-fluid mt-3">
+            <?php if ($this->session->flashdata('success')): ?>
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="fas fa-check-circle me-2"></i>
+                    <?= $this->session->flashdata('success') ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            <?php endif; ?>
+            <?php if ($this->session->flashdata('error')): ?>
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="fas fa-exclamation-circle me-2"></i>
+                    <?= $this->session->flashdata('error') ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            <?php endif; ?>
+            <?php if ($this->session->flashdata('warning')): ?>
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    <?= $this->session->flashdata('warning') ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            <?php endif; ?>
         </div>
-
         <!-- Main content -->
-        <section class="content">
+        <section class="content pt-2 pb-4">
             <div class="container-fluid">

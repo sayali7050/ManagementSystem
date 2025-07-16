@@ -62,16 +62,19 @@ $route['logout'] = 'auth/logout';
 // Admin routes
 $route['admin'] = 'admin/dashboard';
 $route['admin/dashboard'] = 'admin/dashboard';
+$route['admin/dashboard_data'] = 'admin/dashboard_data';
 $route['admin/rooms'] = 'admin/rooms';
 $route['admin/bookings'] = 'admin/bookings';
 $route['admin/users'] = 'admin/users';
 $route['admin/reports'] = 'admin/reports';
 $route['admin/hotels'] = 'admin/hotels';
 $route['admin/settings'] = 'admin/settings';
+$route['admin/users/add'] = 'admin/add_user';
 
 // Customer routes
 $route['customer'] = 'customer/dashboard';
 $route['customer/dashboard'] = 'customer/dashboard';
+$route['customer/dashboard_data'] = 'customer/dashboard_data';
 $route['customer/profile'] = 'customer/profile';
 $route['customer/change-password'] = 'customer/change_password';
 
@@ -85,9 +88,11 @@ $route['booking/invoice/(:num)'] = 'booking/invoice/$1';
 
 // Public routes
 $route['search'] = 'home/search';
+$route['rooms'] = 'home/rooms';
 $route['room/(:num)'] = 'home/room_details/$1';
 $route['about'] = 'home/about';
 $route['contact'] = 'home/contact';
+$route['booking-lookup'] = 'home/booking_lookup';
 
 // API routes
 $route['api/check-availability'] = 'api/check_availability';
@@ -109,3 +114,8 @@ $route['api/contact-form'] = 'api/contact_form';
 // $route['api/rooms'] = 'api/rooms';
 // $route['api/booking'] = 'api/booking';
 // $route['api/availability'] = 'api/availability';
+
+// Room details route
+$route['rooms/(:num)'] = 'home/room_details/$1';
+// Booking form route
+$route['booking'] = 'home/booking_lookup';

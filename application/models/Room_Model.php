@@ -35,14 +35,70 @@ class Room_model extends CI_Model {
         return $this->db->limit($limit, $offset)->get()->result();
     }
 
+    // Get rooms with advanced filters (including capacity and features)
+    public function get_rooms_with_filters($limit = 10, $offset = 0, $filters = array()) {
+        $this->db->select('r.*, h.name as hotel_name, h.star_rating, rt.name as room_type_name, rt.max_occupancy, rt.amenities');
+        $this->db->from('rooms r');
+        $this->db->join('hotels h', 'r.hotel_id = h.id');
+        $this->db->join('room_types rt', 'r.room_type_id = rt.id');
+        
+        // Apply basic filters
+        if (!empty($filters['hotel_id'])) {
+            $this->db->where('r.hotel_id', $filters['hotel_id']);
+        }
+        if (!empty($filters['room_type_id'])) {
+            $this->db->where('r.room_type_id', $filters['room_type_id']);
+        }
+        if (!empty($filters['status'])) {
+            $this->db->where('r.status', $filters['status']);
+        }
+        if (!empty($filters['min_price'])) {
+            $this->db->where('r.price_per_night >=', $filters['min_price']);
+        }
+        if (!empty($filters['max_price'])) {
+            $this->db->where('r.price_per_night <=', $filters['max_price']);
+        }
+        
+        // Apply capacity filter
+        if (!empty($filters['capacity'])) {
+            $capacity_map = ['1' => 1, '2' => 2, '3' => 3, '4' => 4];
+            if (isset($capacity_map[$filters['capacity']])) {
+                $this->db->where('rt.max_occupancy >=', $capacity_map[$filters['capacity']]);
+            }
+        }
+        
+        // Apply features filter
+        if (!empty($filters['features']) && is_array($filters['features'])) {
+            foreach ($filters['features'] as $feature) {
+                // Map feature value to label in amenities string
+                $featureLabel = '';
+                if ($feature === 'wifi') $featureLabel = 'Wi-Fi';
+                if ($feature === 'balcony') $featureLabel = 'Balcony';
+                if ($feature === 'kitchenette') $featureLabel = 'Kitchenette';
+                if ($featureLabel) {
+                    $this->db->like('rt.amenities', $featureLabel);
+                }
+            }
+        }
+        
+        $this->db->order_by('r.price_per_night');
+        return $this->db->limit($limit, $offset)->get()->result();
+    }
+
     // Get room by ID with full details
     public function get_room($id) {
-        $this->db->select('r.*, h.name as hotel_name, h.address, h.city, h.star_rating, rt.name as room_type_name, rt.description as room_type_description, rt.max_occupancy');
+        $this->db->select('r.*, h.name as hotel_name, h.address, h.city, h.star_rating, rt.name as room_type_name, rt.description as description, rt.max_occupancy');
         $this->db->from('rooms r');
         $this->db->join('hotels h', 'r.hotel_id = h.id');
         $this->db->join('room_types rt', 'r.room_type_id = rt.id');
         $this->db->where('r.id', $id);
         return $this->db->get()->row();
+    }
+
+    // Get room by ID as array (for compatibility with Booking controller)
+    public function get_room_by_id($id) {
+        $room = $this->get_room($id);
+        return $room ? (array) $room : null;
     }
 
     // Check room availability for specific dates
@@ -70,7 +126,15 @@ class Room_model extends CI_Model {
 
     // Get available rooms for date range
     public function get_available_rooms($check_in, $check_out, $guests = 1, $filters = array()) {
-        $this->db->select('r.*, h.name as hotel_name, h.star_rating, rt.name as room_type_name, rt.max_occupancy');
+        // Override guests with capacity filter if set
+        if (!empty($filters['capacity'])) {
+            $capacity_map = ['1' => 1, '2' => 2, '3' => 3, '4' => 4];
+            if (isset($capacity_map[$filters['capacity']])) {
+                $guests = $capacity_map[$filters['capacity']];
+            }
+        }
+        
+        $this->db->select('r.*, h.name as hotel_name, h.star_rating, rt.name as room_type_name, rt.max_occupancy, rt.amenities');
         $this->db->from('rooms r');
         $this->db->join('hotels h', 'r.hotel_id = h.id');
         $this->db->join('room_types rt', 'r.room_type_id = rt.id');
@@ -90,6 +154,18 @@ class Room_model extends CI_Model {
         if (!empty($filters['max_price'])) {
             $this->db->where('r.price_per_night <=', $filters['max_price']);
         }
+        if (!empty($filters['features']) && is_array($filters['features'])) {
+            foreach ($filters['features'] as $feature) {
+                // Map feature value to label in amenities string
+                $featureLabel = '';
+                if ($feature === 'wifi') $featureLabel = 'Wi-Fi';
+                if ($feature === 'balcony') $featureLabel = 'Balcony';
+                if ($feature === 'kitchenette') $featureLabel = 'Kitchenette';
+                if ($featureLabel) {
+                    $this->db->like('rt.amenities', $featureLabel);
+                }
+            }
+        }
         
         // Exclude rooms that are already booked
         $this->db->where('r.id NOT IN (
@@ -103,6 +179,11 @@ class Room_model extends CI_Model {
         )', NULL, FALSE);
         
         $this->db->order_by('r.price_per_night');
+        
+        // Debug: Log the SQL query
+        $query = $this->db->get_compiled_select();
+        error_log('SQL Query: ' . $query);
+        
         return $this->db->get()->result();
     }
 
@@ -139,12 +220,16 @@ class Room_model extends CI_Model {
 
     // Get room types
     public function get_room_types() {
-        return $this->db->order_by('base_price')->get('room_types')->result();
+        $this->db->from('room_types');
+        $this->db->order_by('base_price');
+        return $this->db->get()->result();
     }
 
     // Get room type by ID
     public function get_room_type($id) {
-        return $this->db->where('id', $id)->get('room_types')->row();
+        $this->db->from('room_types');
+        $this->db->where('id', $id);
+        return $this->db->get()->row();
     }
 
     // Create room type

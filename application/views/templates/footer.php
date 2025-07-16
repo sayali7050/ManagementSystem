@@ -1,10 +1,10 @@
-<!-- Footer -->
+<!-- LuxuryHotel-inspired Footer -->
 <footer class="footer mt-5 py-4 bg-dark text-light">
     <div class="container">
         <div class="row gy-4">
             <div class="col-md-4 mb-3">
-                <h5 class="fw-bold mb-2 d-flex align-items-center"><i class="fas fa-hotel me-2 text-primary"></i>Hotel Management</h5>
-                <p class="small mb-3">Your premier destination for comfortable stays and exceptional service. Experience luxury and convenience at our finest establishments.</p>
+                <h5 class="fw-bold mb-2 d-flex align-items-center"><i class="fas fa-gem me-2 text-primary"></i>LuxuryHotel</h5>
+                <p class="small mb-3">Your premier destination for luxury stays and exceptional service. Experience elegance and comfort at our finest hotels.</p>
                 <div class="d-flex gap-3">
                     <a href="#" class="text-primary fs-5"><i class="fab fa-facebook-f"></i></a>
                     <a href="#" class="text-primary fs-5"><i class="fab fa-twitter"></i></a>
@@ -35,7 +35,7 @@
                 <ul class="list-unstyled small">
                     <li class="mb-1"><i class="fas fa-map-marker-alt me-2 text-primary"></i>123 Main Street, City, State 12345</li>
                     <li class="mb-1"><i class="fas fa-phone me-2 text-primary"></i>+1 (555) 123-4567</li>
-                    <li class="mb-1"><i class="fas fa-envelope me-2 text-primary"></i>info@hotel.com</li>
+                    <li class="mb-1"><i class="fas fa-envelope me-2 text-primary"></i>info@luxuryhotel.com</li>
                     <li><i class="fas fa-clock me-2 text-primary"></i>24/7 Customer Support</li>
                 </ul>
             </div>
@@ -43,7 +43,7 @@
         <hr class="bg-light">
         <div class="row align-items-center">
             <div class="col-md-6 small">
-                &copy; <?php echo date('Y'); ?> Hotel Management System. All rights reserved.
+                &copy; <?php echo date('Y'); ?> LuxuryHotel. All rights reserved.
             </div>
             <div class="col-md-6 text-md-end small">
                 <a href="#" class="text-primary me-3 text-decoration-none">Privacy Policy</a>

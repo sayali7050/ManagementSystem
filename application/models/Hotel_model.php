@@ -9,13 +9,16 @@ class Hotel_model extends CI_Model {
 
     // Get all hotels
     public function get_hotels($limit = 10, $offset = 0) {
+        $this->db->from('hotels');
         $this->db->order_by('name');
-        return $this->db->limit($limit, $offset)->get('hotels')->result();
+        return $this->db->limit($limit, $offset)->get()->result();
     }
 
     // Get hotel by ID
     public function get_hotel($id) {
-        return $this->db->where('id', $id)->get('hotels')->row();
+        $this->db->from('hotels');
+        $this->db->where('id', $id);
+        return $this->db->get()->row();
     }
 
     // Create new hotel
@@ -52,6 +55,7 @@ class Hotel_model extends CI_Model {
 
     // Search hotels
     public function search_hotels($keyword, $city = null) {
+        $this->db->from('hotels');
         $this->db->like('name', $keyword);
         $this->db->or_like('description', $keyword);
         $this->db->or_like('address', $keyword);
@@ -62,17 +66,22 @@ class Hotel_model extends CI_Model {
         
         $this->db->where('status', 'active');
         $this->db->order_by('star_rating', 'DESC');
-        return $this->db->get('hotels')->result();
+        return $this->db->get()->result();
     }
 
     // Get active hotels only
     public function get_active_hotels() {
-        return $this->db->where('status', 'active')->order_by('name')->get('hotels')->result();
+        $this->db->from('hotels');
+        $this->db->where('status', 'active');
+        $this->db->order_by('name');
+        return $this->db->get()->result();
     }
 
     // Additional methods for Admin controller
     public function get_hotel_by_id($hotel_id) {
-        return $this->db->where('id', $hotel_id)->get('hotels')->row_array();
+        $this->db->from('hotels');
+        $this->db->where('id', $hotel_id);
+        return $this->db->get()->row_array();
     }
 
     // Get hotels with pagination and filters

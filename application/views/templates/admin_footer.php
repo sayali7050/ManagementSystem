@@ -3,24 +3,25 @@
     </div>
 
     <!-- Main Footer -->
-    <footer class="main-footer">
-        <div class="float-right d-none d-sm-block">
-            <b>Version</b> 1.0.0
+    <footer class="bg-white border-top py-3 mt-auto">
+        <div class="container-fluid d-flex justify-content-between align-items-center">
+            <div class="text-muted small">
+                <strong>&copy; <?= date('Y') ?> LuxuryHotel Admin.</strong> All rights reserved.
+            </div>
+            <div class="text-muted small">
+                <b>Version</b> 1.0.0
+            </div>
         </div>
-        <strong>Copyright &copy; <?= date('Y') ?> Hotel Management System.</strong>
-        All rights reserved.
     </footer>
 </div>
 
-<!-- jQuery -->
+<!-- jQuery (for DataTables and legacy support) -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<!-- Bootstrap 4 -->
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
-<!-- AdminLTE App -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/3.1.0/js/adminlte.min.js"></script>
-<!-- DataTables -->
-<script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap4.min.js"></script>
+<!-- Bootstrap 5 JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<!-- DataTables (Bootstrap 5) -->
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
 <!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -86,18 +87,14 @@ $(document).ready(function() {
     // Toast notification function
     function showToast(message, type = 'info') {
         const toastHtml = `
-            <div class="toast toast-${type}" style="position: fixed; top: 20px; right: 20px; z-index: 9999;">
-                <div class="toast-header">
-                    <strong class="me-auto">Notification</strong>
-                    <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+            <div class="toast align-items-center text-bg-${type} border-0 show" style="position: fixed; top: 20px; right: 20px; z-index: 9999;">
+                <div class="d-flex">
+                    <div class="toast-body">${message}</div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
                 </div>
-                <div class="toast-body">${message}</div>
             </div>
         `;
-        
         $('body').append(toastHtml);
-        $('.toast').toast('show');
-        
         setTimeout(function() {
             $('.toast').remove();
         }, 3000);

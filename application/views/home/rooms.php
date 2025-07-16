@@ -1,13 +1,13 @@
-<!-- LuxuryHotel-inspired Search Results Page -->
+<!-- LuxuryHotel-inspired Rooms Page -->
 <!-- Hero Section -->
 <section class="py-5 bg-primary text-white text-center luxury-hero" style="background: linear-gradient(90deg, #1a237e 60%, #1976d2 100%);">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-8">
-                <h1 class="display-4 fw-bold mb-2"><i class="fas fa-search me-2"></i>Find Your Perfect Room</h1>
-                <p class="lead mb-3">Browse our available rooms and book your luxury stay today.</p>
+                <h1 class="display-4 fw-bold mb-2"><i class="fas fa-bed me-2"></i>Browse All Rooms</h1>
+                <p class="lead mb-3">Explore our complete collection of luxury accommodations</p>
                 <a href="<?php echo base_url(); ?>" class="btn btn-light btn-lg">
-                    <i class="fas fa-plus me-2"></i>New Search
+                    <i class="fas fa-search me-2"></i>Search by Date
                 </a>
             </div>
         </div>
@@ -27,12 +27,7 @@
         <div class="col-lg-3">
             <div class="card shadow rounded-4 mb-4 border-0">
                 <div class="card-body">
-                    <form action="<?php echo base_url('search'); ?>" method="GET" id="filterForm">
-                        <!-- Basic Search Parameters (Hidden but needed for AJAX) -->
-                        <input type="hidden" name="check_in" value="<?php echo isset($search_params['check_in']) ? $search_params['check_in'] : date('Y-m-d'); ?>">
-                        <input type="hidden" name="check_out" value="<?php echo isset($search_params['check_out']) ? $search_params['check_out'] : date('Y-m-d', strtotime('+1 day')); ?>">
-                        <input type="hidden" name="guests" value="<?php echo isset($search_params['guests']) ? $search_params['guests'] : 2; ?>">
-                        
+                    <form action="<?php echo base_url('rooms'); ?>" method="GET" id="filterForm">
                         <!-- Filter Rooms Header -->
                         <div class="mb-4">
                             <span style="color:#000;padding:4px 16px;border-radius:4px;font-size:1.2rem;font-weight:bold;display:inline-block;">Filter Rooms</span>
@@ -127,7 +122,7 @@
                                 <div class="card-body">
                                     <div class="d-flex justify-content-between align-items-start mb-2">
                                         <h5 class="card-title mb-0"><i class="fas fa-bed text-primary"></i> <?php echo $room->room_type_name; ?></h5>
-                                        <span class="badge bg-success">Available</span>
+                                        <span class="badge bg-<?php echo $room->status == 'available' ? 'success' : 'warning'; ?>"><?php echo ucfirst($room->status); ?></span>
                                     </div>
                                     <p class="text-muted small mb-2"><i class="fas fa-hotel"></i> <?php echo $room->hotel_name; ?></p>
                                     <div class="mb-2">
@@ -148,7 +143,11 @@
                                     </div>
                                     <p class="small text-muted mb-2">Floor <?php echo $room->floor; ?></p>
                                     <a href="<?php echo base_url('rooms/' . $room->id); ?>" class="btn btn-outline-primary btn-sm me-2">View Details</a>
-                                    <a href="<?php echo base_url('booking?room_id=' . $room->id . '&check_in=' . ($search_params['check_in'] ?? '') . '&check_out=' . ($search_params['check_out'] ?? '') . '&guests=' . ($search_params['guests'] ?? 1)); ?>" class="btn btn-success btn-sm">Book Now</a>
+                                    <?php if ($room->status == 'available'): ?>
+                                        <a href="<?php echo base_url('booking?room_id=' . $room->id); ?>" class="btn btn-success btn-sm">Book Now</a>
+                                    <?php else: ?>
+                                        <button class="btn btn-secondary btn-sm" disabled>Not Available</button>
+                                    <?php endif; ?>
                                 </div>
                             </div>
                         </div>
@@ -157,7 +156,7 @@
                     <div class="col-12">
                         <div class="alert alert-info text-center">
                             <i class="fas fa-info-circle me-2"></i>
-                            <?php echo isset($error) ? $error : 'No rooms found matching your criteria. Please try different filters.'; ?>
+                            No rooms found matching your criteria. Please try different filters.
                         </div>
                     </div>
                 <?php endif; ?>
@@ -215,4 +214,4 @@ $(document).ready(function() {
         }, 300);
     });
 });
-</script>
+</script> 

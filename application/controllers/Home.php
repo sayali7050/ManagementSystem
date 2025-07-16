@@ -24,38 +24,60 @@ class Home extends CI_Controller {
     }
 
     public function search() {
-        // Get search parameters
-        $check_in = $this->input->get('check_in');
-        $check_out = $this->input->get('check_out');
-        $guests = $this->input->get('guests', 1);
+        // Check if this is a direct access without any parameters
+        if (empty($this->input->get())) {
+            redirect(base_url());
+            return;
+        }
+        
+        // Get search parameters with defaults
+        $check_in = $this->input->get('check_in') ?: date('Y-m-d');
+        $check_out = $this->input->get('check_out') ?: date('Y-m-d', strtotime('+1 day'));
+        $guests = $this->input->get('guests') ?: 2;
         $hotel_id = $this->input->get('hotel_id');
         $room_type_id = $this->input->get('room_type_id');
         $min_price = $this->input->get('min_price');
         $max_price = $this->input->get('max_price');
+        // New sidebar filters
+        $price_range = $this->input->get('price_range');
+        $capacity = $this->input->get('capacity');
+        $features = $this->input->get('features'); // array
+
+        // Map price_range dropdown to min/max price
+        if ($price_range == '1') { $min_price = 0; $max_price = 100; }
+        if ($price_range == '2') { $min_price = 100; $max_price = 200; }
+        if ($price_range == '3') { $min_price = 200; $max_price = 300; }
+        if ($price_range == '4') { $min_price = 300; $max_price = null; }
 
         $data['title'] = 'Search Results - Available Rooms';
         $data['search_params'] = $this->input->get();
 
-        if ($check_in && $check_out) {
-            // Validate dates
-            if (strtotime($check_in) >= strtotime($check_out)) {
-                $data['error'] = 'Check-out date must be after check-in date.';
-                $data['rooms'] = [];
-            } else {
-                // Build filters
-                $filters = [];
-                if ($hotel_id) $filters['hotel_id'] = $hotel_id;
-                if ($room_type_id) $filters['room_type_id'] = $room_type_id;
-                if ($min_price) $filters['min_price'] = $min_price;
-                if ($max_price) $filters['max_price'] = $max_price;
+        // Debug: Log the search parameters
+        error_log('Search params: ' . print_r($this->input->get(), true));
 
-                // Search available rooms
-                $data['rooms'] = $this->Room_model->get_available_rooms($check_in, $check_out, $guests, $filters);
-                $data['total_nights'] = (strtotime($check_out) - strtotime($check_in)) / (60 * 60 * 24);
-            }
-        } else {
-            $data['error'] = 'Please select check-in and check-out dates.';
+        // Validate dates
+        if (strtotime($check_in) >= strtotime($check_out)) {
+            $data['error'] = 'Check-out date must be after check-in date.';
             $data['rooms'] = [];
+        } else {
+            // Build filters
+            $filters = [];
+            if ($hotel_id) $filters['hotel_id'] = $hotel_id;
+            if ($room_type_id) $filters['room_type_id'] = $room_type_id;
+            if ($min_price) $filters['min_price'] = $min_price;
+            if ($max_price) $filters['max_price'] = $max_price;
+            if ($capacity) $filters['capacity'] = $capacity;
+            if ($features && is_array($features)) $filters['features'] = $features;
+
+            // Debug: Log the filters
+            error_log('Filters: ' . print_r($filters, true));
+
+            // Search available rooms
+            $data['rooms'] = $this->Room_model->get_available_rooms($check_in, $check_out, $guests, $filters);
+            $data['total_nights'] = (strtotime($check_out) - strtotime($check_in)) / (60 * 60 * 24);
+            
+            // Debug: Log the results
+            error_log('Found ' . count($data['rooms']) . ' rooms');
         }
 
         // Get filter options
@@ -139,6 +161,135 @@ class Home extends CI_Controller {
         
         $this->load->view('templates/header', $data);
         $this->load->view('home/booking_lookup', $data);
+        $this->load->view('templates/footer');
+    }
+
+    public function test_filters() {
+        // Test method to verify filters are working
+        echo "<h2>Testing Filters</h2>";
+        
+        // Test basic room query
+        $rooms = $this->Room_model->get_rooms(10, 0, []);
+        echo "<h3>All Rooms (" . count($rooms) . " found):</h3>";
+        foreach ($rooms as $room) {
+            echo "- {$room->hotel_name}: {$room->room_type_name} - \${$room->price_per_night}<br>";
+        }
+        
+        // Test available rooms query
+        $check_in = date('Y-m-d');
+        $check_out = date('Y-m-d', strtotime('+1 day'));
+        $available_rooms = $this->Room_model->get_available_rooms($check_in, $check_out, 2, []);
+        echo "<h3>Available Rooms for {$check_in} to {$check_out} (" . count($available_rooms) . " found):</h3>";
+        foreach ($available_rooms as $room) {
+            echo "- {$room->hotel_name}: {$room->room_type_name} - \${$room->price_per_night} (max: {$room->max_occupancy})<br>";
+        }
+        
+        // Test price filter
+        $price_filtered = $this->Room_model->get_available_rooms($check_in, $check_out, 2, ['min_price' => 100, 'max_price' => 200]);
+        echo "<h3>Price Filtered (\$100-\$200) (" . count($price_filtered) . " found):</h3>";
+        foreach ($price_filtered as $room) {
+            echo "- {$room->hotel_name}: {$room->room_type_name} - \${$room->price_per_night}<br>";
+        }
+        
+        // Test capacity filter
+        $capacity_filtered = $this->Room_model->get_available_rooms($check_in, $check_out, 2, ['capacity' => '3']);
+        echo "<h3>Capacity Filtered (3+ guests) (" . count($capacity_filtered) . " found):</h3>";
+        foreach ($capacity_filtered as $room) {
+            echo "- {$room->hotel_name}: {$room->room_type_name} - \${$room->price_per_night} (max: {$room->max_occupancy})<br>";
+        }
+        
+        // Test amenities filter
+        $amenities_filtered = $this->Room_model->get_available_rooms($check_in, $check_out, 2, ['features' => ['wifi']]);
+        echo "<h3>Amenities Filtered (Wi-Fi) (" . count($amenities_filtered) . " found):</h3>";
+        foreach ($amenities_filtered as $room) {
+            echo "- {$room->hotel_name}: {$room->room_type_name} - \${$room->price_per_night} (amenities: {$room->amenities})<br>";
+        }
+    }
+
+    public function test_db() {
+        echo "<h2>Database Connection Test</h2>";
+        
+        // Test database connection
+        if ($this->db->simple_query('SELECT 1')) {
+            echo "<p style='color:green'>✓ Database connection successful</p>";
+        } else {
+            echo "<p style='color:red'>✗ Database connection failed</p>";
+            return;
+        }
+        
+        // Test if tables exist
+        $tables = ['hotels', 'room_types', 'rooms', 'bookings'];
+        foreach ($tables as $table) {
+            $result = $this->db->query("SHOW TABLES LIKE '$table'");
+            if ($result->num_rows() > 0) {
+                echo "<p style='color:green'>✓ Table '$table' exists</p>";
+            } else {
+                echo "<p style='color:red'>✗ Table '$table' does not exist</p>";
+            }
+        }
+        
+        // Test hotel model
+        try {
+            $hotels = $this->Hotel_model->get_active_hotels();
+            echo "<p style='color:green'>✓ Hotel model working - Found " . count($hotels) . " hotels</p>";
+        } catch (Exception $e) {
+            echo "<p style='color:red'>✗ Hotel model error: " . $e->getMessage() . "</p>";
+        }
+        
+        // Test room types model
+        try {
+            $room_types = $this->Room_model->get_room_types();
+            echo "<p style='color:green'>✓ Room types model working - Found " . count($room_types) . " room types</p>";
+        } catch (Exception $e) {
+            echo "<p style='color:red'>✗ Room types model error: " . $e->getMessage() . "</p>";
+        }
+        
+        // Test rooms model
+        try {
+            $rooms = $this->Room_model->get_rooms(5, 0, []);
+            echo "<p style='color:green'>✓ Rooms model working - Found " . count($rooms) . " rooms</p>";
+        } catch (Exception $e) {
+            echo "<p style='color:red'>✗ Rooms model error: " . $e->getMessage() . "</p>";
+        }
+    }
+
+    public function rooms() {
+        // Get filter parameters
+        $hotel_id = $this->input->get('hotel_id');
+        $room_type_id = $this->input->get('room_type_id');
+        $min_price = $this->input->get('min_price');
+        $max_price = $this->input->get('max_price');
+        $price_range = $this->input->get('price_range');
+        $capacity = $this->input->get('capacity');
+        $features = $this->input->get('features'); // array
+
+        // Map price_range dropdown to min/max price
+        if ($price_range == '1') { $min_price = 0; $max_price = 100; }
+        if ($price_range == '2') { $min_price = 100; $max_price = 200; }
+        if ($price_range == '3') { $min_price = 200; $max_price = 300; }
+        if ($price_range == '4') { $min_price = 300; $max_price = null; }
+
+        $data['title'] = 'All Rooms - Browse Our Accommodations';
+        $data['search_params'] = $this->input->get();
+
+        // Build filters
+        $filters = [];
+        if ($hotel_id) $filters['hotel_id'] = $hotel_id;
+        if ($room_type_id) $filters['room_type_id'] = $room_type_id;
+        if ($min_price) $filters['min_price'] = $min_price;
+        if ($max_price) $filters['max_price'] = $max_price;
+        if ($capacity) $filters['capacity'] = $capacity;
+        if ($features && is_array($features)) $filters['features'] = $features;
+
+        // Get all rooms with filters
+        $data['rooms'] = $this->Room_model->get_rooms_with_filters(50, 0, $filters);
+
+        // Get filter options
+        $data['hotels'] = $this->Hotel_model->get_active_hotels();
+        $data['room_types'] = $this->Room_model->get_room_types();
+
+        $this->load->view('templates/header', $data);
+        $this->load->view('home/rooms', $data);
         $this->load->view('templates/footer');
     }
 }

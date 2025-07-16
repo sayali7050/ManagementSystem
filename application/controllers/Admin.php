@@ -51,6 +51,26 @@ class Admin extends CI_Controller {
         $this->load->view('templates/admin_footer');
     }
 
+    public function dashboard_data() {
+        if (!$this->input->is_ajax_request()) {
+            show_404();
+        }
+        $data = [];
+        $data['stats'] = array(
+            'total_bookings' => $this->Booking_model->count_bookings(),
+            'total_rooms' => $this->Room_model->count_rooms(),
+            'total_users' => $this->User_model->count_users('customer'),
+            'total_hotels' => $this->Hotel_model->count_hotels()
+        );
+        $data['todays_checkins'] = $this->Booking_model->get_todays_checkins();
+        $data['todays_checkouts'] = $this->Booking_model->get_todays_checkouts();
+        $data['recent_bookings'] = $this->Booking_model->get_bookings(5, 0);
+        $first_day = date('Y-m-01');
+        $last_day = date('Y-m-t');
+        $data['monthly_stats'] = $this->Booking_model->get_booking_stats($first_day, $last_day);
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
+    }
+
     public function rooms() {
         $data['title'] = 'Room Management - Admin';
         
@@ -127,6 +147,46 @@ class Admin extends CI_Controller {
         $this->load->view('templates/admin_header', $data);
         $this->load->view('admin/users', $data);
         $this->load->view('templates/admin_footer');
+    }
+
+    public function add_user() {
+        // Only allow admin or staff
+        $role = $this->session->userdata('role');
+        if ($role !== 'admin' && $role !== 'staff') {
+            show_error('Unauthorized', 403);
+        }
+
+        if ($this->input->post()) {
+            $this->form_validation->set_rules('first_name', 'First Name', 'required|trim');
+            $this->form_validation->set_rules('last_name', 'Last Name', 'required|trim');
+            $this->form_validation->set_rules('username', 'Username', 'required|trim|min_length[3]|max_length[50]|is_unique[users.username]');
+            $this->form_validation->set_rules('email', 'Email', 'required|valid_email|is_unique[users.email]');
+            $this->form_validation->set_rules('password', 'Password', 'required|min_length[6]');
+            $this->form_validation->set_rules('role', 'Role', 'required|in_list[admin,staff,customer]');
+
+            if ($this->form_validation->run()) {
+                $user_data = array(
+                    'first_name' => $this->input->post('first_name'),
+                    'last_name' => $this->input->post('last_name'),
+                    'username' => $this->input->post('username'),
+                    'email' => $this->input->post('email'),
+                    'password' => $this->input->post('password'),
+                    'role' => $this->input->post('role'),
+                    'status' => 'active'
+                );
+                if ($this->User_model->create_user($user_data)) {
+                    $this->session->set_flashdata('success', 'User created successfully!');
+                } else {
+                    $this->session->set_flashdata('error', 'Failed to create user. Please try again.');
+                }
+                redirect('admin/users');
+            } else {
+                $this->session->set_flashdata('error', validation_errors());
+                redirect('admin/users');
+            }
+        } else {
+            show_404();
+        }
     }
 
     public function reports() {

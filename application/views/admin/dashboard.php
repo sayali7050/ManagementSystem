@@ -1,79 +1,68 @@
-<div class="row">
-    <div class="col-lg-3 col-6">
-        <div class="info-box bg-info">
-            <span class="info-box-icon"><i class="fas fa-calendar-check"></i></span>
-            <div class="info-box-content">
-                <span class="info-box-text">Total Bookings</span>
-                <span class="info-box-number"><?= isset($stats['total_bookings']) ? number_format($stats['total_bookings']) : '0' ?></span>
-                <div class="progress">
-                    <div class="progress-bar" style="width: 70%"></div>
+<!-- LuxuryHotel Admin Dashboard - Bootstrap 5 Refactor -->
+<div class="row g-4 mb-4">
+    <div class="col-md-3">
+        <div class="card shadow-sm border-0 bg-gradient-primary text-white h-100" style="background: linear-gradient(90deg, #1a237e 60%, #1976d2 100%);">
+            <div class="card-body d-flex align-items-center justify-content-between">
+                <div>
+                    <div class="fs-2 mb-2"><i class="fas fa-calendar-check"></i></div>
+                    <div class="fw-bold fs-5">Total Bookings</div>
+                    <div class="fs-4 fw-bold mb-1"><?= isset($stats['total_bookings']) ? number_format($stats['total_bookings']) : '0' ?></div>
+                    <div class="small">All time bookings</div>
                 </div>
-                <span class="progress-description">All time bookings</span>
             </div>
         </div>
     </div>
-
-    <div class="col-lg-3 col-6">
-        <div class="info-box bg-success">
-            <span class="info-box-icon"><i class="fas fa-bed"></i></span>
-            <div class="info-box-content">
-                <span class="info-box-text">Total Rooms</span>
-                <span class="info-box-number"><?= isset($stats['total_rooms']) ? number_format($stats['total_rooms']) : '0' ?></span>
-                <div class="progress">
-                    <div class="progress-bar" style="width: 85%"></div>
+    <div class="col-md-3">
+        <div class="card shadow-sm border-0 bg-gradient-success text-white h-100" style="background: linear-gradient(90deg, #43cea2 60%, #185a9d 100%);">
+            <div class="card-body d-flex align-items-center justify-content-between">
+                <div>
+                    <div class="fs-2 mb-2"><i class="fas fa-bed"></i></div>
+                    <div class="fw-bold fs-5">Total Rooms</div>
+                    <div class="fs-4 fw-bold mb-1"><?= isset($stats['total_rooms']) ? number_format($stats['total_rooms']) : '0' ?></div>
+                    <div class="small">Available rooms</div>
                 </div>
-                <span class="progress-description">Available rooms</span>
             </div>
         </div>
     </div>
-
-    <div class="col-lg-3 col-6">
-        <div class="info-box bg-warning">
-            <span class="info-box-icon"><i class="fas fa-users"></i></span>
-            <div class="info-box-content">
-                <span class="info-box-text">Total Customers</span>
-                <span class="info-box-number"><?= isset($stats['total_users']) ? number_format($stats['total_users']) : '0' ?></span>
-                <div class="progress">
-                    <div class="progress-bar" style="width: 60%"></div>
+    <div class="col-md-3">
+        <div class="card shadow-sm border-0 bg-gradient-warning text-white h-100" style="background: linear-gradient(90deg, #f7971e 60%, #ffd200 100%);">
+            <div class="card-body d-flex align-items-center justify-content-between">
+                <div>
+                    <div class="fs-2 mb-2"><i class="fas fa-users"></i></div>
+                    <div class="fw-bold fs-5">Total Customers</div>
+                    <div class="fs-4 fw-bold mb-1"><?= isset($stats['total_users']) ? number_format($stats['total_users']) : '0' ?></div>
+                    <div class="small">Registered users</div>
                 </div>
-                <span class="progress-description">Registered users</span>
             </div>
         </div>
     </div>
-
-    <div class="col-lg-3 col-6">
-        <div class="info-box bg-danger">
-            <span class="info-box-icon"><i class="fas fa-building"></i></span>
-            <div class="info-box-content">
-                <span class="info-box-text">Total Hotels</span>
-                <span class="info-box-number"><?= isset($stats['total_hotels']) ? number_format($stats['total_hotels']) : '0' ?></span>
-                <div class="progress">
-                    <div class="progress-bar" style="width: 90%"></div>
+    <div class="col-md-3">
+        <div class="card shadow-sm border-0 bg-gradient-danger text-white h-100" style="background: linear-gradient(90deg, #e53935 60%, #e35d5b 100%);">
+            <div class="card-body d-flex align-items-center justify-content-between">
+                <div>
+                    <div class="fs-2 mb-2"><i class="fas fa-building"></i></div>
+                    <div class="fw-bold fs-5">Total Hotels</div>
+                    <div class="fs-4 fw-bold mb-1"><?= isset($stats['total_hotels']) ? number_format($stats['total_hotels']) : '0' ?></div>
+                    <div class="small">Active properties</div>
                 </div>
-                <span class="progress-description">Active properties</span>
             </div>
         </div>
     </div>
 </div>
 
-<div class="row">
+<div class="row g-4 mb-4">
     <!-- Today's Check-ins -->
-    <div class="col-md-6">
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">
-                    <i class="fas fa-sign-in-alt mr-2"></i>
-                    Today's Check-ins
-                </h3>
-                <div class="card-tools">
-                    <span class="badge badge-info"><?= isset($todays_checkins) ? count($todays_checkins) : 0 ?></span>
-                </div>
+    <div class="col-lg-6">
+        <div class="card shadow-sm h-100">
+            <div class="card-header bg-primary text-white d-flex align-items-center justify-content-between">
+                <h5 class="mb-0"><i class="fas fa-sign-in-alt me-2"></i>Today's Check-ins</h5>
+                <span class="badge bg-info fs-6"><?= isset($todays_checkins) ? count($todays_checkins) : 0 ?></span>
             </div>
             <div class="card-body">
                 <?php if (isset($todays_checkins) && !empty($todays_checkins)): ?>
                     <div class="table-responsive">
-                        <table class="table table-sm">
-                            <thead>
+                        <table class="table table-sm align-middle">
+                            <thead class="table-light">
                                 <tr>
                                     <th>Room</th>
                                     <th>Guest</th>
@@ -88,7 +77,7 @@
                                     <td><?= $checkin->first_name . ' ' . $checkin->last_name ?></td>
                                     <td><?= $checkin->phone ?></td>
                                     <td>
-                                        <button class="btn btn-sm btn-success" onclick="checkInGuest(<?= $checkin->id ?>)">
+                                        <button class="btn btn-success btn-sm" onclick="checkInGuest(<?= $checkin->id ?>)">
                                             <i class="fas fa-check"></i>
                                         </button>
                                     </td>
@@ -103,24 +92,18 @@
             </div>
         </div>
     </div>
-
     <!-- Today's Check-outs -->
-    <div class="col-md-6">
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">
-                    <i class="fas fa-sign-out-alt mr-2"></i>
-                    Today's Check-outs
-                </h3>
-                <div class="card-tools">
-                    <span class="badge badge-warning"><?= isset($todays_checkouts) ? count($todays_checkouts) : 0 ?></span>
-                </div>
+    <div class="col-lg-6">
+        <div class="card shadow-sm h-100">
+            <div class="card-header bg-primary text-white d-flex align-items-center justify-content-between">
+                <h5 class="mb-0"><i class="fas fa-sign-out-alt me-2"></i>Today's Check-outs</h5>
+                <span class="badge bg-warning fs-6"><?= isset($todays_checkouts) ? count($todays_checkouts) : 0 ?></span>
             </div>
             <div class="card-body">
                 <?php if (isset($todays_checkouts) && !empty($todays_checkouts)): ?>
                     <div class="table-responsive">
-                        <table class="table table-sm">
-                            <thead>
+                        <table class="table table-sm align-middle">
+                            <thead class="table-light">
                                 <tr>
                                     <th>Room</th>
                                     <th>Guest</th>
@@ -135,7 +118,7 @@
                                     <td><?= $checkout->first_name . ' ' . $checkout->last_name ?></td>
                                     <td><?= $checkout->phone ?></td>
                                     <td>
-                                        <button class="btn btn-sm btn-danger" onclick="checkOutGuest(<?= $checkout->id ?>)">
+                                        <button class="btn btn-danger btn-sm" onclick="checkOutGuest(<?= $checkout->id ?>)">
                                             <i class="fas fa-times"></i>
                                         </button>
                                     </td>
@@ -153,25 +136,20 @@
 </div>
 
 <!-- Recent Bookings -->
-<div class="row">
+<div class="row g-4 mb-4">
     <div class="col-12">
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">
-                    <i class="fas fa-clock mr-2"></i>
-                    Recent Bookings
-                </h3>
-                <div class="card-tools">
-                    <a href="<?= base_url('admin/bookings') ?>" class="btn btn-sm btn-primary">
-                        View All <i class="fas fa-arrow-right ml-1"></i>
-                    </a>
-                </div>
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white d-flex align-items-center justify-content-between">
+                <h5 class="mb-0"><i class="fas fa-clock me-2"></i>Recent Bookings</h5>
+                <a href="<?= base_url('admin/bookings') ?>" class="btn btn-outline-light btn-sm">
+                    View All <i class="fas fa-arrow-right ms-1"></i>
+                </a>
             </div>
             <div class="card-body">
                 <?php if (isset($recent_bookings) && !empty($recent_bookings)): ?>
                     <div class="table-responsive">
-                        <table class="table table-striped">
-                            <thead>
+                        <table class="table table-striped align-middle">
+                            <thead class="table-light">
                                 <tr>
                                     <th>Reference</th>
                                     <th>Guest</th>
@@ -201,7 +179,7 @@
                                             default: $status_class = 'secondary';
                                         }
                                         ?>
-                                        <span class="badge badge-<?= $status_class ?>"><?= ucfirst($booking->status) ?></span>
+                                        <span class="badge bg-<?= $status_class ?>"><?= ucfirst($booking->status) ?></span>
                                     </td>
                                     <td>$<?= number_format($booking->total_amount, 2) ?></td>
                                 </tr>
@@ -218,14 +196,11 @@
 </div>
 
 <!-- Monthly Statistics Chart -->
-<div class="row">
+<div class="row g-4 mb-4">
     <div class="col-12">
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">
-                    <i class="fas fa-chart-line mr-2"></i>
-                    Monthly Statistics
-                </h3>
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="fas fa-chart-line me-2"></i>Monthly Statistics</h5>
             </div>
             <div class="card-body">
                 <canvas id="monthlyChart" height="100"></canvas>
@@ -235,19 +210,21 @@
 </div>
 
 <script>
-// Chart.js configuration
-$(document).ready(function() {
-    // Monthly Statistics Chart
+// Chart.js instance (will be updated by AJAX)
+let monthlyChart;
+
+function renderMonthlyChart(data) {
     const ctx = document.getElementById('monthlyChart').getContext('2d');
-    const monthlyChart = new Chart(ctx, {
+    if (monthlyChart) monthlyChart.destroy();
+    monthlyChart = new Chart(ctx, {
         type: 'line',
         data: {
             labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
             datasets: [{
                 label: 'Bookings',
-                data: [12, 19, 15, 25, 22, 30, 28, 35, 32, 40, 38, 45],
-                borderColor: '#667eea',
-                backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                data: data,
+                borderColor: '#1976d2',
+                backgroundColor: 'rgba(25, 118, 210, 0.1)',
                 borderWidth: 2,
                 fill: true
             }]
@@ -256,18 +233,98 @@ $(document).ready(function() {
             responsive: true,
             maintainAspectRatio: false,
             scales: {
-                y: {
-                    beginAtZero: true
-                }
+                y: { beginAtZero: true }
             },
             plugins: {
-                legend: {
-                    display: true,
-                    position: 'top'
-                }
+                legend: { display: true, position: 'top' }
             }
         }
     });
+}
+
+function updateDashboardData() {
+    $.getJSON('<?= base_url('admin/dashboard_data') ?>', function(data) {
+        // Update stats
+        $(".card:contains('Total Bookings') .fs-4").text(Number(data.stats.total_bookings).toLocaleString());
+        $(".card:contains('Total Rooms') .fs-4").text(Number(data.stats.total_rooms).toLocaleString());
+        $(".card:contains('Total Customers') .fs-4").text(Number(data.stats.total_users).toLocaleString());
+        $(".card:contains('Total Hotels') .fs-4").text(Number(data.stats.total_hotels).toLocaleString());
+
+        // Update check-ins
+        let checkinsHtml = '';
+        if (data.todays_checkins && data.todays_checkins.length > 0) {
+            data.todays_checkins.forEach(function(checkin) {
+                checkinsHtml += `<tr>
+                    <td>${checkin.room_number}</td>
+                    <td>${checkin.first_name} ${checkin.last_name}</td>
+                    <td>${checkin.phone}</td>
+                    <td><button class='btn btn-success btn-sm' onclick='checkInGuest(${checkin.id})'><i class='fas fa-check'></i></button></td>
+                </tr>`;
+            });
+            $(".card:contains('Check-ins') .badge.bg-info").text(data.todays_checkins.length);
+            $(".card:contains('Check-ins') tbody").html(checkinsHtml);
+        } else {
+            $(".card:contains('Check-ins') .badge.bg-info").text('0');
+            $(".card:contains('Check-ins') tbody").html('<tr><td colspan=4 class="text-muted">No check-ins scheduled for today.</td></tr>');
+        }
+
+        // Update check-outs
+        let checkoutsHtml = '';
+        if (data.todays_checkouts && data.todays_checkouts.length > 0) {
+            data.todays_checkouts.forEach(function(checkout) {
+                checkoutsHtml += `<tr>
+                    <td>${checkout.room_number}</td>
+                    <td>${checkout.first_name} ${checkout.last_name}</td>
+                    <td>${checkout.phone}</td>
+                    <td><button class='btn btn-danger btn-sm' onclick='checkOutGuest(${checkout.id})'><i class='fas fa-times'></i></button></td>
+                </tr>`;
+            });
+            $(".card:contains('Check-outs') .badge.bg-warning").text(data.todays_checkouts.length);
+            $(".card:contains('Check-outs') tbody").html(checkoutsHtml);
+        } else {
+            $(".card:contains('Check-outs') .badge.bg-warning").text('0');
+            $(".card:contains('Check-outs') tbody").html('<tr><td colspan=4 class="text-muted">No check-outs scheduled for today.</td></tr>');
+        }
+
+        // Update recent bookings
+        let bookingsHtml = '';
+        if (data.recent_bookings && data.recent_bookings.length > 0) {
+            data.recent_bookings.forEach(function(booking) {
+                let statusClass = 'secondary';
+                switch(booking.status) {
+                    case 'confirmed': statusClass = 'success'; break;
+                    case 'pending': statusClass = 'warning'; break;
+                    case 'cancelled': statusClass = 'danger'; break;
+                    case 'completed': statusClass = 'info'; break;
+                }
+                bookingsHtml += `<tr>
+                    <td><strong>${booking.booking_reference}</strong></td>
+                    <td>${booking.first_name} ${booking.last_name}</td>
+                    <td>${booking.hotel_name}</td>
+                    <td>${booking.room_number}</td>
+                    <td>${booking.check_in_date ? new Date(booking.check_in_date).toLocaleDateString() : ''}</td>
+                    <td><span class='badge bg-${statusClass}'>${booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}</span></td>
+                    <td>$${Number(booking.total_amount).toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}</td>
+                </tr>`;
+            });
+            $(".card:contains('Recent Bookings') tbody").html(bookingsHtml);
+        } else {
+            $(".card:contains('Recent Bookings') tbody").html('<tr><td colspan=7 class="text-muted">No recent bookings found.</td></tr>');
+        }
+
+        // Update monthly chart
+        if (data.monthly_stats && data.monthly_stats.by_status && data.monthly_stats.by_status.confirmed) {
+            // Example: use confirmed bookings per month if available
+            // For now, just use total bookings as a flat line
+            let monthlyData = Array(12).fill(data.stats.total_bookings);
+            renderMonthlyChart(monthlyData);
+        }
+    });
+}
+
+$(document).ready(function() {
+    updateDashboardData();
+    setInterval(updateDashboardData, 30000); // 30 seconds
 });
 
 // Dashboard functions
@@ -279,7 +336,7 @@ function checkInGuest(bookingId) {
         })
         .done(function(response) {
             if (response.success) {
-                location.reload();
+                updateDashboardData();
             } else {
                 alert('Failed to update status');
             }
@@ -295,7 +352,7 @@ function checkOutGuest(bookingId) {
         })
         .done(function(response) {
             if (response.success) {
-                location.reload();
+                updateDashboardData();
             } else {
                 alert('Failed to update status');
             }

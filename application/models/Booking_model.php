@@ -12,13 +12,17 @@ class Booking_model extends CI_Model {
         $data['booking_reference'] = $this->generate_booking_reference();
         $data['created_at'] = date('Y-m-d H:i:s');
         
-        // Calculate total nights and amount
+        // Calculate total nights
         $check_in = new DateTime($data['check_in_date']);
         $check_out = new DateTime($data['check_out_date']);
         $total_nights = $check_out->diff($check_in)->days;
         
         $data['total_nights'] = $total_nights;
-        $data['total_amount'] = ($data['room_price'] * $total_nights) + $data['tax_amount'];
+        // Remove room_price, tax_amount, and total_nights if present
+        unset($data['room_price']);
+        unset($data['tax_amount']);
+        unset($data['total_nights']);
+        // total_amount should already be calculated in controller
         
         return $this->db->insert('bookings', $data) ? $this->db->insert_id() : false;
     }
@@ -27,7 +31,9 @@ class Booking_model extends CI_Model {
     private function generate_booking_reference() {
         do {
             $reference = 'BK' . date('Y') . sprintf('%06d', mt_rand(1, 999999));
-            $exists = $this->db->where('booking_reference', $reference)->count_all_results('bookings');
+            $this->db->from('bookings');
+            $this->db->where('booking_reference', $reference);
+            $exists = $this->db->count_all_results();
         } while ($exists > 0);
         
         return $reference;
@@ -190,31 +196,34 @@ class Booking_model extends CI_Model {
         }
         
         // Total bookings
-        $stats['total_bookings'] = $this->db->count_all_results('bookings');
+        $this->db->from('bookings');
+        $stats['total_bookings'] = $this->db->count_all_results();
         
         // Reset query for next count
         $this->db->reset_query();
         
         // Bookings by status
+        $this->db->from('bookings');
         $this->db->select('status, COUNT(*) as count');
         if ($date_from && $date_to) {
             $this->db->where('created_at >=', $date_from);
             $this->db->where('created_at <=', $date_to);
         }
         $this->db->group_by('status');
-        $status_stats = $this->db->get('bookings')->result();
+        $status_stats = $this->db->get()->result();
         foreach ($status_stats as $stat) {
             $stats['by_status'][$stat->status] = $stat->count;
         }
         
         // Total revenue
+        $this->db->from('bookings');
         $this->db->select('SUM(total_amount) as total_revenue');
         $this->db->where('payment_status', 'paid');
         if ($date_from && $date_to) {
             $this->db->where('created_at >=', $date_from);
             $this->db->where('created_at <=', $date_to);
         }
-        $revenue = $this->db->get('bookings')->row();
+        $revenue = $this->db->get()->row();
         $stats['total_revenue'] = $revenue->total_revenue ?: 0;
         
         return $stats;
@@ -260,32 +269,40 @@ class Booking_model extends CI_Model {
     }
 
     public function get_booking_reference($booking_id) {
-        $booking = $this->db->select('booking_reference')->where('id', $booking_id)->get('bookings')->row();
+        $this->db->from('bookings');
+        $this->db->select('booking_reference');
+        $this->db->where('id', $booking_id);
+        $booking = $this->db->get()->row();
         return $booking ? $booking->booking_reference : false;
     }
 
     public function count_user_bookings($user_id) {
-        return $this->db->where('user_id', $user_id)->count_all_results('bookings');
+        $this->db->from('bookings');
+        $this->db->where('user_id', $user_id);
+        return $this->db->count_all_results();
     }
 
     public function count_upcoming_bookings($user_id) {
         $today = date('Y-m-d');
-        return $this->db->where('user_id', $user_id)
-                       ->where('check_in_date >=', $today)
-                       ->where('status', 'confirmed')
-                       ->count_all_results('bookings');
+        $this->db->from('bookings');
+        $this->db->where('user_id', $user_id);
+        $this->db->where('check_in_date >=', $today);
+        $this->db->where('status', 'confirmed');
+        return $this->db->count_all_results();
     }
 
     public function count_completed_bookings($user_id) {
-        return $this->db->where('user_id', $user_id)
-                       ->where('status', 'completed')
-                       ->count_all_results('bookings');
+        $this->db->from('bookings');
+        $this->db->where('user_id', $user_id);
+        $this->db->where('status', 'completed');
+        return $this->db->count_all_results();
     }
 
     public function count_cancelled_bookings($user_id) {
-        return $this->db->where('user_id', $user_id)
-                       ->where('status', 'cancelled')
-                       ->count_all_results('bookings');
+        $this->db->from('bookings');
+        $this->db->where('user_id', $user_id);
+        $this->db->where('status', 'cancelled');
+        return $this->db->count_all_results();
     }
 
     public function get_user_bookings($user_id, $limit = 10, $offset = 0) {
